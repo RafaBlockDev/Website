@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# experiments: virtualenvs, downloaded model weights, bytecode
+experiments/**/.venv/
+experiments/**/.hf-cache/
+__pycache__/
+*.pyc

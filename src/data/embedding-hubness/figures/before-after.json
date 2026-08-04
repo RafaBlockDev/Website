@@ -1,0 +1,33 @@
+{
+ "k": 5,
+ "metrics": [
+  {
+   "key": "skewness",
+   "label": "Skewness of N₅",
+   "before": 0.767,
+   "after": 0.303,
+   "digits": 2
+  },
+  {
+   "key": "max_n5",
+   "label": "Maximum N₅",
+   "before": 14,
+   "after": 9,
+   "digits": 0
+  },
+  {
+   "key": "never_neighbor",
+   "label": "Never a neighbor",
+   "before": 1,
+   "after": 0,
+   "digits": 0
+  },
+  {
+   "key": "reciprocity",
+   "label": "Reciprocity",
+   "before": 0.672,
+   "after": 0.808,
+   "digits": 2
+  }
+ ]
+}

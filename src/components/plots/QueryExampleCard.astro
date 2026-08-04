@@ -1,0 +1,178 @@
+---
+import examples from '../../data/embedding-hubness/figures/examples.json';
+
+interface Props {
+  kind: 'repaired' | 'regressed' | 'unresolved';
+  figureNumber: number;
+  label: string;
+}
+
+const { kind, figureNumber, label } = Astro.props;
+const ex = (examples as any)[kind];
+const id = `fig-example-${kind}`;
+---
+
+<figure class="not-prose my-8">
+  <figcaption>
+    <p class="font-mono text-xs uppercase tracking-wide text-accent">
+      Figure {figureNumber} &middot; {label}: “{ex.text}”
+    </p>
+    <p class="mt-1 max-w-2xl text-sm text-ink/70">
+      Rank of each top-candidate document under cosine, and under CSLS. Relevant documents are marked with
+      a filled dot.
+    </p>
+  </figcaption>
+
+  <div
+    id={id}
+    class="mx-auto mt-4 w-full max-w-lg overflow-x-auto"
+    role="img"
+    aria-label={`Rank movement for query: ${ex.text}`}
+    aria-describedby={`${id}-desc`}
+    style="min-height: 14rem;"
+  >
+  </div>
+  <p id={`${id}-desc`} class="sr-only">
+    Bump chart showing, for the query "{ex.text}", how each of the top candidate documents ranks under
+    cosine similarity versus under CSLS. Relevant documents: {ex.relevant.join(', ')}.
+    Rank-1/rank-2 margin under cosine: {ex.marginCosine.toFixed(4)}.
+  </p>
+  <p class="mt-3 text-center font-mono text-xs text-ink/60">
+    Solid dot: relevant document. Rank 8 means "outside the top five" on that side.
+  </p>
+
+  <details class="mt-4 border border-ink/10 rounded-sm px-4 py-3">
+    <summary class="cursor-pointer font-mono text-xs uppercase tracking-wide text-accent">
+      Full top-five rankings
+    </summary>
+    <div class="mt-3 grid gap-6 sm:grid-cols-2">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-wide text-ink/60">Cosine</p>
+        <ol class="mt-2 space-y-1 text-sm">
+          {
+            ex.cosine.map((c: any, i: number) => (
+              <li class:list={['flex gap-2', c.relevant && 'font-medium text-ink']}>
+                <span class="w-4 font-mono text-ink/40">{i + 1}</span>
+                <span class="flex-1">
+                  {c.title}
+                  {c.generic && <span class="text-ink/40"> (generic)</span>}
+                </span>
+                <span class="font-mono text-ink/50">{c.score.toFixed(3)}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+      <div>
+        <p class="font-mono text-xs uppercase tracking-wide text-ink/60">CSLS</p>
+        <ol class="mt-2 space-y-1 text-sm">
+          {
+            ex.csls.map((c: any, i: number) => (
+              <li class:list={['flex gap-2', c.relevant && 'font-medium text-ink']}>
+                <span class="w-4 font-mono text-ink/40">{i + 1}</span>
+                <span class="flex-1">
+                  {c.title}
+                  {c.generic && <span class="text-ink/40"> (generic)</span>}
+                </span>
+                <span class="font-mono text-ink/50">
+                  {c.score.toFixed(3)}
+                  <span class="text-ink/35"> (was #{c.cosine_rank})</span>
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+    <p class="mt-3 text-xs text-ink/55">
+      Cosine and CSLS scores are not on the same scale: CSLS is twice the cosine similarity minus two
+      density terms, so compare rank order between the columns, not the score values across them.
+    </p>
+  </details>
+</figure>
+
+<script>
+  import * as Plot from '@observablehq/plot';
+  import examples from '../../data/embedding-hubness/figures/examples.json';
+  import { COLORS, baseStyle, renderResponsive, truncate } from './plot-theme';
+
+  for (const [kind, ex] of Object.entries(examples) as [string, any][]) {
+    const id = `fig-example-${kind}`;
+    const container = document.getElementById(id);
+    if (!container) continue;
+
+    const relevantSet = new Set<string>(ex.relevant);
+    const byDoc = new Map<string, { doc: string; title: string; relevant: boolean; cosineRank: number | null; cslsRank: number | null }>();
+
+    ex.cosine.forEach((c: any, i: number) => {
+      byDoc.set(c.doc, { doc: c.doc, title: c.title, relevant: relevantSet.has(c.doc), cosineRank: i + 1, cslsRank: null });
+    });
+    ex.csls.forEach((c: any, i: number) => {
+      const existing = byDoc.get(c.doc);
+      if (existing) {
+        existing.cslsRank = i + 1;
+      } else {
+        byDoc.set(c.doc, { doc: c.doc, title: c.title, relevant: relevantSet.has(c.doc), cosineRank: c.cosine_rank, cslsRank: i + 1 });
+      }
+    });
+
+    const OFF_CHART = 8;
+    const rows = Array.from(byDoc.values());
+    const lines: any[] = [];
+    for (const r of rows) {
+      const y1 = Math.min(r.cosineRank ?? OFF_CHART, OFF_CHART);
+      const y2 = Math.min(r.cslsRank ?? OFF_CHART, OFF_CHART);
+      lines.push({ ...r, x: 'cosine', y: y1 });
+      lines.push({ ...r, x: 'csls', y: y2 });
+    }
+
+    renderResponsive(container, (width) =>
+      Plot.plot({
+        width,
+        height: 230,
+        marginLeft: 46,
+        marginRight: 150,
+        marginTop: 16,
+        marginBottom: 26,
+        style: baseStyle,
+        x: { domain: ['cosine', 'csls'], label: null, padding: 0.5 },
+        y: {
+          domain: [1, OFF_CHART],
+          reverse: true,
+          ticks: [1, 2, 3, 4, 5, OFF_CHART],
+          tickFormat: (d: number) => (d === OFF_CHART ? '> 5' : String(d)),
+          label: 'rank',
+          labelArrow: false
+        },
+        marks: [
+          Plot.line(lines, {
+            x: 'x',
+            y: 'y',
+            z: 'doc',
+            stroke: (d: any) => (d.relevant ? COLORS.accent : COLORS.inkFaint),
+            strokeWidth: (d: any) => (d.relevant ? 2 : 1)
+          }),
+          Plot.dot(lines, {
+            x: 'x',
+            y: 'y',
+            fill: (d: any) => (d.relevant ? COLORS.accent : COLORS.paper),
+            stroke: (d: any) => (d.relevant ? COLORS.accent : COLORS.inkMuted),
+            r: 4.5
+          }),
+          Plot.text(
+            lines.filter((d) => d.x === 'csls'),
+            {
+              x: 'x',
+              y: 'y',
+              text: (d: any) => truncate(d.title, 24),
+              dx: 10,
+              textAnchor: 'start',
+              fill: (d: any) => (d.relevant ? COLORS.ink : COLORS.inkMuted),
+              fontSize: 11
+            }
+          )
+        ]
+      })
+    );
+  }
+</script>

@@ -1,0 +1,89 @@
+---
+import ObservablePlot from './ObservablePlot.astro';
+import margins from '../../data/embedding-hubness/figures/margins.json';
+
+const { summary } = margins;
+const hit = summary.hit;
+const miss = summary.miss;
+---
+
+<ObservablePlot
+  id="fig-margins"
+  title="Figure 3 · Rank-1 margin analysis"
+  description="Top score and rank-1/rank-2 margin for all 24 queries, split by whether rank 1 was correct."
+  srDescription={`Two strip plots of the 24 queries, split into correct and incorrect rank-1 retrievals. Top score: correct queries average ${hit.mean_top_score.toFixed(
+    3
+  )}, incorrect queries average ${miss.mean_top_score.toFixed(
+    3
+  )}, so the distributions overlap. Rank-1 margin: correct queries average ${hit.mean_margin.toFixed(
+    3
+  )} with median ${hit.median_margin.toFixed(3)}, incorrect queries average ${miss.mean_margin.toFixed(
+    3
+  )} with median ${miss.median_margin.toFixed(3)}, so the margin separates the two groups far more cleanly than the top score does.`}
+  caption={`Correct rank-1 (n=${hit.n}) vs. incorrect rank-1 (n=${miss.n}). Ticks mark each group's median. Top score barely separates the groups; margin does.`}
+  maxWidth="34rem"
+  minHeight="16rem"
+>
+</ObservablePlot>
+
+<script>
+  import * as Plot from '@observablehq/plot';
+  import margins from '../../data/embedding-hubness/figures/margins.json';
+  import { COLORS, baseStyle } from './plot-theme';
+
+  const container = document.getElementById('fig-margins');
+  if (container) {
+    const rows = margins.queries.map((q: any) => ({ ...q, category: q.hit ? 'Correct' : 'Incorrect' }));
+    const categories = ['Correct', 'Incorrect'];
+
+    function panel(width: number, key: 'topScore' | 'margin', title: string, domain: [number, number]) {
+      const medians = categories.map((category) => {
+        const vals = rows.filter((r: any) => r.category === category).map((r: any) => r[key]).sort((a: number, b: number) => a - b);
+        const mid = Math.floor(vals.length / 2);
+        const median = vals.length % 2 ? vals[mid] : (vals[mid - 1] + vals[mid]) / 2;
+        return { category, median };
+      });
+
+      return Plot.plot({
+        width,
+        height: 140,
+        marginLeft: 86,
+        marginRight: 14,
+        marginTop: 22,
+        marginBottom: 36,
+        style: baseStyle,
+        x: { domain, label: title, labelAnchor: 'center', labelArrow: false, grid: true },
+        y: { domain: categories, label: null },
+        marks: [
+          Plot.dot(rows, {
+            x: key,
+            y: 'category',
+            fill: (d: any) => (d.category === 'Correct' ? COLORS.accent : COLORS.hub),
+            fillOpacity: 0.65,
+            r: 4
+          }),
+          Plot.tickX(medians, { x: 'median', y: 'category', stroke: COLORS.ink, strokeWidth: 2 }),
+          Plot.ruleX([0])
+        ]
+      });
+    }
+
+    const paint = () => {
+      const width = Math.max(container.clientWidth, 220);
+
+      const wrap = document.createElement('div');
+      wrap.className = 'flex flex-col gap-4';
+      wrap.append(panel(width, 'topScore', 'top score', [0, 0.75]));
+      wrap.append(panel(width, 'margin', 'rank-1 to rank-2 margin', [0, 0.32]));
+
+      container.replaceChildren(wrap);
+    };
+
+    paint();
+    let frame: number | null = null;
+    new ResizeObserver(() => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(paint);
+    }).observe(container);
+  }
+</script>

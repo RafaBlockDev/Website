@@ -1,0 +1,6402 @@
+{
+ "queryKeys": [
+  {
+   "row": "Q01",
+   "id": "q-cold-start",
+   "text": "why is the first request to my model endpoint so slow after a deploy",
+   "style": "specific"
+  },
+  {
+   "row": "Q02",
+   "id": "q-throughput",
+   "text": "how do I increase inference throughput on the same GPU",
+   "style": "specific"
+  },
+  {
+   "row": "Q03",
+   "id": "q-vram-long-context",
+   "text": "long conversations run out of GPU memory partway through",
+   "style": "specific"
+  },
+  {
+   "row": "Q04",
+   "id": "q-shrink-model",
+   "text": "shrink the memory footprint of a model without retraining it",
+   "style": "specific"
+  },
+  {
+   "row": "Q05",
+   "id": "q-vram-numbers",
+   "text": "the reported GPU memory usage does not match what the process allocated",
+   "style": "specific"
+  },
+  {
+   "row": "Q06",
+   "id": "q-chunk-size",
+   "text": "what chunk size should I use before embedding documents",
+   "style": "specific"
+  },
+  {
+   "row": "Q07",
+   "id": "q-chunk-tables",
+   "text": "my splitter cuts tables and code blocks in half",
+   "style": "specific"
+  },
+  {
+   "row": "Q08",
+   "id": "q-duplicate-results",
+   "text": "the same boilerplate passage keeps showing up in the results",
+   "style": "specific"
+  },
+  {
+   "row": "Q09",
+   "id": "q-index-ignored",
+   "text": "the database ignores the index and does a sequential scan",
+   "style": "specific"
+  },
+  {
+   "row": "Q10",
+   "id": "q-index-writes",
+   "text": "inserts got slower after we added several indexes",
+   "style": "specific"
+  },
+  {
+   "row": "Q11",
+   "id": "q-index-order",
+   "text": "does the order of columns in a multi column index matter",
+   "style": "specific"
+  },
+  {
+   "row": "Q12",
+   "id": "q-modal-keyboard",
+   "text": "keyboard users get stuck when a dialog opens",
+   "style": "specific"
+  },
+  {
+   "row": "Q13",
+   "id": "q-reduced-motion",
+   "text": "disable animations for people who prefer less movement",
+   "style": "specific"
+  },
+  {
+   "row": "Q14",
+   "id": "q-screen-reader-nav",
+   "text": "screen reader users cannot find the sections of a long page",
+   "style": "specific"
+  },
+  {
+   "row": "Q15",
+   "id": "q-ci-local",
+   "text": "the tests pass on my laptop but fail on the build server",
+   "style": "specific"
+  },
+  {
+   "row": "Q16",
+   "id": "q-ci-install",
+   "text": "the install step fails because the lockfile is out of date",
+   "style": "specific"
+  },
+  {
+   "row": "Q17",
+   "id": "q-ci-slow",
+   "text": "the pipeline is cancelled for taking too long",
+   "style": "specific"
+  },
+  {
+   "row": "Q18",
+   "id": "q-alt-text",
+   "text": "what should the alternative text of a chart say",
+   "style": "specific"
+  },
+  {
+   "row": "Q19",
+   "id": "qt-smaller-model",
+   "text": "make the model smaller",
+   "style": "terse"
+  },
+  {
+   "row": "Q20",
+   "id": "qt-slow-query",
+   "text": "the query is slow",
+   "style": "terse"
+  },
+  {
+   "row": "Q21",
+   "id": "qt-keyboard",
+   "text": "the site does not work with a keyboard",
+   "style": "terse"
+  },
+  {
+   "row": "Q22",
+   "id": "qt-oom",
+   "text": "out of memory",
+   "style": "terse"
+  },
+  {
+   "row": "Q23",
+   "id": "qt-first-response",
+   "text": "the first response takes too long",
+   "style": "terse"
+  },
+  {
+   "row": "Q24",
+   "id": "qt-repeated-results",
+   "text": "the results repeat themselves",
+   "style": "terse"
+  }
+ ],
+ "documents": [
+  {
+   "id": "serving-cold-start",
+   "label": "Cold start latency on…",
+   "topic": "serving"
+  },
+  {
+   "id": "serving-batching",
+   "label": "Dynamic batching for…",
+   "topic": "serving"
+  },
+  {
+   "id": "serving-warm-pool",
+   "label": "Keeping models…",
+   "topic": "serving"
+  },
+  {
+   "id": "serving-export",
+   "label": "Exporting to ONNX for…",
+   "topic": "serving"
+  },
+  {
+   "id": "serving-streaming",
+   "label": "Streaming output and…",
+   "topic": "serving"
+  },
+  {
+   "id": "serving-versions",
+   "label": "Routing between model…",
+   "topic": "serving"
+  },
+  {
+   "id": "serving-tokenizer",
+   "label": "Tokenizer mismatch…",
+   "topic": "serving"
+  },
+  {
+   "id": "gpu-oom-inference",
+   "label": "Out of memory during…",
+   "topic": "gpu"
+  },
+  {
+   "id": "gpu-quantization",
+   "label": "Weight quantization…",
+   "topic": "gpu"
+  },
+  {
+   "id": "gpu-kv-cache",
+   "label": "KV cache growth with…",
+   "topic": "gpu"
+  },
+  {
+   "id": "gpu-checkpointing",
+   "label": "Gradient checkpointing…",
+   "topic": "gpu"
+  },
+  {
+   "id": "gpu-measuring",
+   "label": "Measuring VRAM…",
+   "topic": "gpu"
+  },
+  {
+   "id": "gpu-mixed-precision",
+   "label": "Mixed precision…",
+   "topic": "gpu"
+  },
+  {
+   "id": "gpu-fragmentation",
+   "label": "Allocator fragmentatio…",
+   "topic": "gpu"
+  },
+  {
+   "id": "chunking-fixed-vs-semantic",
+   "label": "Fixed-size versus…",
+   "topic": "chunking"
+  },
+  {
+   "id": "chunking-overlap",
+   "label": "Overlap between…",
+   "topic": "chunking"
+  },
+  {
+   "id": "chunking-truncation",
+   "label": "Chunks longer than…",
+   "topic": "chunking"
+  },
+  {
+   "id": "chunking-metadata",
+   "label": "Carrying headings…",
+   "topic": "chunking"
+  },
+  {
+   "id": "chunking-tables",
+   "label": "Tables and code…",
+   "topic": "chunking"
+  },
+  {
+   "id": "chunking-dedup",
+   "label": "Near-duplicate chunks…",
+   "topic": "chunking"
+  },
+  {
+   "id": "chunking-parent",
+   "label": "Retrieving small and…",
+   "topic": "chunking"
+  },
+  {
+   "id": "indexing-column-order",
+   "label": "Column order in a…",
+   "topic": "indexing"
+  },
+  {
+   "id": "indexing-unused",
+   "label": "The planner ignores…",
+   "topic": "indexing"
+  },
+  {
+   "id": "indexing-write-cost",
+   "label": "Write amplification…",
+   "topic": "indexing"
+  },
+  {
+   "id": "indexing-partial",
+   "label": "Partial indexes for…",
+   "topic": "indexing"
+  },
+  {
+   "id": "indexing-explain",
+   "label": "Reading an execution…",
+   "topic": "indexing"
+  },
+  {
+   "id": "indexing-bloat",
+   "label": "Index bloat after…",
+   "topic": "indexing"
+  },
+  {
+   "id": "indexing-covering",
+   "label": "Covering indexes and…",
+   "topic": "indexing"
+  },
+  {
+   "id": "a11y-focus",
+   "label": "Visible focus…",
+   "topic": "a11y"
+  },
+  {
+   "id": "a11y-contrast",
+   "label": "Text contrast ratios",
+   "topic": "a11y"
+  },
+  {
+   "id": "a11y-labels",
+   "label": "Form labels and…",
+   "topic": "a11y"
+  },
+  {
+   "id": "a11y-modal",
+   "label": "Keyboard behaviour in…",
+   "topic": "a11y"
+  },
+  {
+   "id": "a11y-alt-text",
+   "label": "Alternative text for…",
+   "topic": "a11y"
+  },
+  {
+   "id": "a11y-motion",
+   "label": "Respecting reduced…",
+   "topic": "a11y"
+  },
+  {
+   "id": "a11y-structure",
+   "label": "Headings and landmarks",
+   "topic": "a11y"
+  },
+  {
+   "id": "ci-flaky",
+   "label": "Flaky tests from…",
+   "topic": "ci"
+  },
+  {
+   "id": "ci-cache",
+   "label": "Cache keys that never…",
+   "topic": "ci"
+  },
+  {
+   "id": "ci-env",
+   "label": "Passes locally, fails…",
+   "topic": "ci"
+  },
+  {
+   "id": "ci-lockfile",
+   "label": "Lockfile drift breaks…",
+   "topic": "ci"
+  },
+  {
+   "id": "ci-disk",
+   "label": "Runner disk exhaustion",
+   "topic": "ci"
+  },
+  {
+   "id": "ci-timeouts",
+   "label": "Integration tests…",
+   "topic": "ci"
+  },
+  {
+   "id": "ci-matrix",
+   "label": "One matrix entry fails",
+   "topic": "ci"
+  },
+  {
+   "id": "generic-troubleshooting",
+   "label": "General troubleshootin…",
+   "topic": "generic"
+  },
+  {
+   "id": "generic-performance",
+   "label": "Performance checklist",
+   "topic": "generic"
+  },
+  {
+   "id": "generic-overview",
+   "label": "Platform documentation…",
+   "topic": "generic"
+  },
+  {
+   "id": "generic-faq",
+   "label": "Frequently asked…",
+   "topic": "generic"
+  },
+  {
+   "id": "generic-glossary",
+   "label": "Glossary of terms",
+   "topic": "generic"
+  },
+  {
+   "id": "generic-onboarding",
+   "label": "Onboarding checklist",
+   "topic": "generic"
+  },
+  {
+   "id": "generic-release-notes",
+   "label": "Release notes summary",
+   "topic": "generic"
+  },
+  {
+   "id": "generic-escalation",
+   "label": "Reporting a problem",
+   "topic": "generic"
+  }
+ ],
+ "cells": [
+  {
+   "row": "Q01",
+   "doc": "serving-cold-start",
+   "value": 0.479
+  },
+  {
+   "row": "Q01",
+   "doc": "serving-batching",
+   "value": 0.194
+  },
+  {
+   "row": "Q01",
+   "doc": "serving-warm-pool",
+   "value": 0.323
+  },
+  {
+   "row": "Q01",
+   "doc": "serving-export",
+   "value": 0.203
+  },
+  {
+   "row": "Q01",
+   "doc": "serving-streaming",
+   "value": 0.317
+  },
+  {
+   "row": "Q01",
+   "doc": "serving-versions",
+   "value": 0.333
+  },
+  {
+   "row": "Q01",
+   "doc": "serving-tokenizer",
+   "value": 0.335
+  },
+  {
+   "row": "Q01",
+   "doc": "gpu-oom-inference",
+   "value": 0.229
+  },
+  {
+   "row": "Q01",
+   "doc": "gpu-quantization",
+   "value": 0.082
+  },
+  {
+   "row": "Q01",
+   "doc": "gpu-kv-cache",
+   "value": 0.173
+  },
+  {
+   "row": "Q01",
+   "doc": "gpu-checkpointing",
+   "value": 0.157
+  },
+  {
+   "row": "Q01",
+   "doc": "gpu-measuring",
+   "value": 0.08
+  },
+  {
+   "row": "Q01",
+   "doc": "gpu-mixed-precision",
+   "value": 0.063
+  },
+  {
+   "row": "Q01",
+   "doc": "gpu-fragmentation",
+   "value": 0.192
+  },
+  {
+   "row": "Q01",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.008
+  },
+  {
+   "row": "Q01",
+   "doc": "chunking-overlap",
+   "value": -0.011
+  },
+  {
+   "row": "Q01",
+   "doc": "chunking-truncation",
+   "value": 0.155
+  },
+  {
+   "row": "Q01",
+   "doc": "chunking-metadata",
+   "value": 0.056
+  },
+  {
+   "row": "Q01",
+   "doc": "chunking-tables",
+   "value": -0.05
+  },
+  {
+   "row": "Q01",
+   "doc": "chunking-dedup",
+   "value": 0.115
+  },
+  {
+   "row": "Q01",
+   "doc": "chunking-parent",
+   "value": 0.12
+  },
+  {
+   "row": "Q01",
+   "doc": "indexing-column-order",
+   "value": 0.041
+  },
+  {
+   "row": "Q01",
+   "doc": "indexing-unused",
+   "value": 0.036
+  },
+  {
+   "row": "Q01",
+   "doc": "indexing-write-cost",
+   "value": 0.145
+  },
+  {
+   "row": "Q01",
+   "doc": "indexing-partial",
+   "value": 0.135
+  },
+  {
+   "row": "Q01",
+   "doc": "indexing-explain",
+   "value": 0.244
+  },
+  {
+   "row": "Q01",
+   "doc": "indexing-bloat",
+   "value": 0.239
+  },
+  {
+   "row": "Q01",
+   "doc": "indexing-covering",
+   "value": 0.206
+  },
+  {
+   "row": "Q01",
+   "doc": "a11y-focus",
+   "value": -0.043
+  },
+  {
+   "row": "Q01",
+   "doc": "a11y-contrast",
+   "value": 0.015
+  },
+  {
+   "row": "Q01",
+   "doc": "a11y-labels",
+   "value": 0.008
+  },
+  {
+   "row": "Q01",
+   "doc": "a11y-modal",
+   "value": 0.035
+  },
+  {
+   "row": "Q01",
+   "doc": "a11y-alt-text",
+   "value": -0.112
+  },
+  {
+   "row": "Q01",
+   "doc": "a11y-motion",
+   "value": 0.044
+  },
+  {
+   "row": "Q01",
+   "doc": "a11y-structure",
+   "value": 0.036
+  },
+  {
+   "row": "Q01",
+   "doc": "ci-flaky",
+   "value": 0.112
+  },
+  {
+   "row": "Q01",
+   "doc": "ci-cache",
+   "value": 0.192
+  },
+  {
+   "row": "Q01",
+   "doc": "ci-env",
+   "value": 0.319
+  },
+  {
+   "row": "Q01",
+   "doc": "ci-lockfile",
+   "value": 0.135
+  },
+  {
+   "row": "Q01",
+   "doc": "ci-disk",
+   "value": 0.254
+  },
+  {
+   "row": "Q01",
+   "doc": "ci-timeouts",
+   "value": 0.179
+  },
+  {
+   "row": "Q01",
+   "doc": "ci-matrix",
+   "value": 0.112
+  },
+  {
+   "row": "Q01",
+   "doc": "generic-troubleshooting",
+   "value": 0.178
+  },
+  {
+   "row": "Q01",
+   "doc": "generic-performance",
+   "value": 0.258
+  },
+  {
+   "row": "Q01",
+   "doc": "generic-overview",
+   "value": 0.095
+  },
+  {
+   "row": "Q01",
+   "doc": "generic-faq",
+   "value": 0.163
+  },
+  {
+   "row": "Q01",
+   "doc": "generic-glossary",
+   "value": 0.041
+  },
+  {
+   "row": "Q01",
+   "doc": "generic-onboarding",
+   "value": 0.19
+  },
+  {
+   "row": "Q01",
+   "doc": "generic-release-notes",
+   "value": 0.148
+  },
+  {
+   "row": "Q01",
+   "doc": "generic-escalation",
+   "value": 0.193
+  },
+  {
+   "row": "Q02",
+   "doc": "serving-cold-start",
+   "value": 0.213
+  },
+  {
+   "row": "Q02",
+   "doc": "serving-batching",
+   "value": 0.507
+  },
+  {
+   "row": "Q02",
+   "doc": "serving-warm-pool",
+   "value": 0.174
+  },
+  {
+   "row": "Q02",
+   "doc": "serving-export",
+   "value": 0.231
+  },
+  {
+   "row": "Q02",
+   "doc": "serving-streaming",
+   "value": 0.122
+  },
+  {
+   "row": "Q02",
+   "doc": "serving-versions",
+   "value": 0.101
+  },
+  {
+   "row": "Q02",
+   "doc": "serving-tokenizer",
+   "value": 0.075
+  },
+  {
+   "row": "Q02",
+   "doc": "gpu-oom-inference",
+   "value": 0.42
+  },
+  {
+   "row": "Q02",
+   "doc": "gpu-quantization",
+   "value": 0.278
+  },
+  {
+   "row": "Q02",
+   "doc": "gpu-kv-cache",
+   "value": 0.245
+  },
+  {
+   "row": "Q02",
+   "doc": "gpu-checkpointing",
+   "value": 0.289
+  },
+  {
+   "row": "Q02",
+   "doc": "gpu-measuring",
+   "value": 0.304
+  },
+  {
+   "row": "Q02",
+   "doc": "gpu-mixed-precision",
+   "value": 0.226
+  },
+  {
+   "row": "Q02",
+   "doc": "gpu-fragmentation",
+   "value": 0.202
+  },
+  {
+   "row": "Q02",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.042
+  },
+  {
+   "row": "Q02",
+   "doc": "chunking-overlap",
+   "value": 0.142
+  },
+  {
+   "row": "Q02",
+   "doc": "chunking-truncation",
+   "value": 0.065
+  },
+  {
+   "row": "Q02",
+   "doc": "chunking-metadata",
+   "value": -0.015
+  },
+  {
+   "row": "Q02",
+   "doc": "chunking-tables",
+   "value": 0.045
+  },
+  {
+   "row": "Q02",
+   "doc": "chunking-dedup",
+   "value": 0.044
+  },
+  {
+   "row": "Q02",
+   "doc": "chunking-parent",
+   "value": 0.09
+  },
+  {
+   "row": "Q02",
+   "doc": "indexing-column-order",
+   "value": -0.046
+  },
+  {
+   "row": "Q02",
+   "doc": "indexing-unused",
+   "value": -0.031
+  },
+  {
+   "row": "Q02",
+   "doc": "indexing-write-cost",
+   "value": 0.161
+  },
+  {
+   "row": "Q02",
+   "doc": "indexing-partial",
+   "value": 0.033
+  },
+  {
+   "row": "Q02",
+   "doc": "indexing-explain",
+   "value": 0.178
+  },
+  {
+   "row": "Q02",
+   "doc": "indexing-bloat",
+   "value": 0.103
+  },
+  {
+   "row": "Q02",
+   "doc": "indexing-covering",
+   "value": 0.09
+  },
+  {
+   "row": "Q02",
+   "doc": "a11y-focus",
+   "value": 0.048
+  },
+  {
+   "row": "Q02",
+   "doc": "a11y-contrast",
+   "value": 0.025
+  },
+  {
+   "row": "Q02",
+   "doc": "a11y-labels",
+   "value": -0.129
+  },
+  {
+   "row": "Q02",
+   "doc": "a11y-modal",
+   "value": 0.025
+  },
+  {
+   "row": "Q02",
+   "doc": "a11y-alt-text",
+   "value": -0.11
+  },
+  {
+   "row": "Q02",
+   "doc": "a11y-motion",
+   "value": 0.028
+  },
+  {
+   "row": "Q02",
+   "doc": "a11y-structure",
+   "value": 0.045
+  },
+  {
+   "row": "Q02",
+   "doc": "ci-flaky",
+   "value": 0.043
+  },
+  {
+   "row": "Q02",
+   "doc": "ci-cache",
+   "value": -0.006
+  },
+  {
+   "row": "Q02",
+   "doc": "ci-env",
+   "value": 0.099
+  },
+  {
+   "row": "Q02",
+   "doc": "ci-lockfile",
+   "value": -0.116
+  },
+  {
+   "row": "Q02",
+   "doc": "ci-disk",
+   "value": 0.078
+  },
+  {
+   "row": "Q02",
+   "doc": "ci-timeouts",
+   "value": 0.094
+  },
+  {
+   "row": "Q02",
+   "doc": "ci-matrix",
+   "value": 0.082
+  },
+  {
+   "row": "Q02",
+   "doc": "generic-troubleshooting",
+   "value": 0.02
+  },
+  {
+   "row": "Q02",
+   "doc": "generic-performance",
+   "value": 0.344
+  },
+  {
+   "row": "Q02",
+   "doc": "generic-overview",
+   "value": -0.048
+  },
+  {
+   "row": "Q02",
+   "doc": "generic-faq",
+   "value": 0.078
+  },
+  {
+   "row": "Q02",
+   "doc": "generic-glossary",
+   "value": 0.042
+  },
+  {
+   "row": "Q02",
+   "doc": "generic-onboarding",
+   "value": 0.015
+  },
+  {
+   "row": "Q02",
+   "doc": "generic-release-notes",
+   "value": 0.04
+  },
+  {
+   "row": "Q02",
+   "doc": "generic-escalation",
+   "value": -0.057
+  },
+  {
+   "row": "Q03",
+   "doc": "serving-cold-start",
+   "value": 0.185
+  },
+  {
+   "row": "Q03",
+   "doc": "serving-batching",
+   "value": 0.418
+  },
+  {
+   "row": "Q03",
+   "doc": "serving-warm-pool",
+   "value": 0.258
+  },
+  {
+   "row": "Q03",
+   "doc": "serving-export",
+   "value": 0.167
+  },
+  {
+   "row": "Q03",
+   "doc": "serving-streaming",
+   "value": 0.155
+  },
+  {
+   "row": "Q03",
+   "doc": "serving-versions",
+   "value": 0.128
+  },
+  {
+   "row": "Q03",
+   "doc": "serving-tokenizer",
+   "value": 0.132
+  },
+  {
+   "row": "Q03",
+   "doc": "gpu-oom-inference",
+   "value": 0.398
+  },
+  {
+   "row": "Q03",
+   "doc": "gpu-quantization",
+   "value": 0.235
+  },
+  {
+   "row": "Q03",
+   "doc": "gpu-kv-cache",
+   "value": 0.451
+  },
+  {
+   "row": "Q03",
+   "doc": "gpu-checkpointing",
+   "value": 0.37
+  },
+  {
+   "row": "Q03",
+   "doc": "gpu-measuring",
+   "value": 0.433
+  },
+  {
+   "row": "Q03",
+   "doc": "gpu-mixed-precision",
+   "value": 0.249
+  },
+  {
+   "row": "Q03",
+   "doc": "gpu-fragmentation",
+   "value": 0.271
+  },
+  {
+   "row": "Q03",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.133
+  },
+  {
+   "row": "Q03",
+   "doc": "chunking-overlap",
+   "value": 0.172
+  },
+  {
+   "row": "Q03",
+   "doc": "chunking-truncation",
+   "value": 0.231
+  },
+  {
+   "row": "Q03",
+   "doc": "chunking-metadata",
+   "value": 0.116
+  },
+  {
+   "row": "Q03",
+   "doc": "chunking-tables",
+   "value": 0.093
+  },
+  {
+   "row": "Q03",
+   "doc": "chunking-dedup",
+   "value": 0.146
+  },
+  {
+   "row": "Q03",
+   "doc": "chunking-parent",
+   "value": 0.161
+  },
+  {
+   "row": "Q03",
+   "doc": "indexing-column-order",
+   "value": -0.073
+  },
+  {
+   "row": "Q03",
+   "doc": "indexing-unused",
+   "value": 0.057
+  },
+  {
+   "row": "Q03",
+   "doc": "indexing-write-cost",
+   "value": 0.18
+  },
+  {
+   "row": "Q03",
+   "doc": "indexing-partial",
+   "value": 0.093
+  },
+  {
+   "row": "Q03",
+   "doc": "indexing-explain",
+   "value": 0.237
+  },
+  {
+   "row": "Q03",
+   "doc": "indexing-bloat",
+   "value": 0.316
+  },
+  {
+   "row": "Q03",
+   "doc": "indexing-covering",
+   "value": 0.124
+  },
+  {
+   "row": "Q03",
+   "doc": "a11y-focus",
+   "value": -0.003
+  },
+  {
+   "row": "Q03",
+   "doc": "a11y-contrast",
+   "value": 0.051
+  },
+  {
+   "row": "Q03",
+   "doc": "a11y-labels",
+   "value": 0.03
+  },
+  {
+   "row": "Q03",
+   "doc": "a11y-modal",
+   "value": 0.159
+  },
+  {
+   "row": "Q03",
+   "doc": "a11y-alt-text",
+   "value": -0.042
+  },
+  {
+   "row": "Q03",
+   "doc": "a11y-motion",
+   "value": 0.078
+  },
+  {
+   "row": "Q03",
+   "doc": "a11y-structure",
+   "value": 0.135
+  },
+  {
+   "row": "Q03",
+   "doc": "ci-flaky",
+   "value": 0.173
+  },
+  {
+   "row": "Q03",
+   "doc": "ci-cache",
+   "value": 0.127
+  },
+  {
+   "row": "Q03",
+   "doc": "ci-env",
+   "value": 0.112
+  },
+  {
+   "row": "Q03",
+   "doc": "ci-lockfile",
+   "value": 0.056
+  },
+  {
+   "row": "Q03",
+   "doc": "ci-disk",
+   "value": 0.279
+  },
+  {
+   "row": "Q03",
+   "doc": "ci-timeouts",
+   "value": 0.213
+  },
+  {
+   "row": "Q03",
+   "doc": "ci-matrix",
+   "value": 0.182
+  },
+  {
+   "row": "Q03",
+   "doc": "generic-troubleshooting",
+   "value": 0.242
+  },
+  {
+   "row": "Q03",
+   "doc": "generic-performance",
+   "value": 0.195
+  },
+  {
+   "row": "Q03",
+   "doc": "generic-overview",
+   "value": 0.046
+  },
+  {
+   "row": "Q03",
+   "doc": "generic-faq",
+   "value": 0.27
+  },
+  {
+   "row": "Q03",
+   "doc": "generic-glossary",
+   "value": 0.12
+  },
+  {
+   "row": "Q03",
+   "doc": "generic-onboarding",
+   "value": 0.089
+  },
+  {
+   "row": "Q03",
+   "doc": "generic-release-notes",
+   "value": 0.124
+  },
+  {
+   "row": "Q03",
+   "doc": "generic-escalation",
+   "value": 0.19
+  },
+  {
+   "row": "Q04",
+   "doc": "serving-cold-start",
+   "value": 0.229
+  },
+  {
+   "row": "Q04",
+   "doc": "serving-batching",
+   "value": 0.125
+  },
+  {
+   "row": "Q04",
+   "doc": "serving-warm-pool",
+   "value": 0.409
+  },
+  {
+   "row": "Q04",
+   "doc": "serving-export",
+   "value": 0.197
+  },
+  {
+   "row": "Q04",
+   "doc": "serving-streaming",
+   "value": 0.029
+  },
+  {
+   "row": "Q04",
+   "doc": "serving-versions",
+   "value": 0.176
+  },
+  {
+   "row": "Q04",
+   "doc": "serving-tokenizer",
+   "value": 0.218
+  },
+  {
+   "row": "Q04",
+   "doc": "gpu-oom-inference",
+   "value": 0.405
+  },
+  {
+   "row": "Q04",
+   "doc": "gpu-quantization",
+   "value": 0.292
+  },
+  {
+   "row": "Q04",
+   "doc": "gpu-kv-cache",
+   "value": 0.333
+  },
+  {
+   "row": "Q04",
+   "doc": "gpu-checkpointing",
+   "value": 0.408
+  },
+  {
+   "row": "Q04",
+   "doc": "gpu-measuring",
+   "value": 0.198
+  },
+  {
+   "row": "Q04",
+   "doc": "gpu-mixed-precision",
+   "value": 0.164
+  },
+  {
+   "row": "Q04",
+   "doc": "gpu-fragmentation",
+   "value": 0.322
+  },
+  {
+   "row": "Q04",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.131
+  },
+  {
+   "row": "Q04",
+   "doc": "chunking-overlap",
+   "value": 0.02
+  },
+  {
+   "row": "Q04",
+   "doc": "chunking-truncation",
+   "value": 0.113
+  },
+  {
+   "row": "Q04",
+   "doc": "chunking-metadata",
+   "value": 0.078
+  },
+  {
+   "row": "Q04",
+   "doc": "chunking-tables",
+   "value": 0.111
+  },
+  {
+   "row": "Q04",
+   "doc": "chunking-dedup",
+   "value": 0.102
+  },
+  {
+   "row": "Q04",
+   "doc": "chunking-parent",
+   "value": 0.248
+  },
+  {
+   "row": "Q04",
+   "doc": "indexing-column-order",
+   "value": -0.14
+  },
+  {
+   "row": "Q04",
+   "doc": "indexing-unused",
+   "value": 0.037
+  },
+  {
+   "row": "Q04",
+   "doc": "indexing-write-cost",
+   "value": 0.142
+  },
+  {
+   "row": "Q04",
+   "doc": "indexing-partial",
+   "value": 0.027
+  },
+  {
+   "row": "Q04",
+   "doc": "indexing-explain",
+   "value": 0.096
+  },
+  {
+   "row": "Q04",
+   "doc": "indexing-bloat",
+   "value": 0.236
+  },
+  {
+   "row": "Q04",
+   "doc": "indexing-covering",
+   "value": 0.107
+  },
+  {
+   "row": "Q04",
+   "doc": "a11y-focus",
+   "value": -0.023
+  },
+  {
+   "row": "Q04",
+   "doc": "a11y-contrast",
+   "value": -0.05
+  },
+  {
+   "row": "Q04",
+   "doc": "a11y-labels",
+   "value": 0.016
+  },
+  {
+   "row": "Q04",
+   "doc": "a11y-modal",
+   "value": -0.029
+  },
+  {
+   "row": "Q04",
+   "doc": "a11y-alt-text",
+   "value": -0.067
+  },
+  {
+   "row": "Q04",
+   "doc": "a11y-motion",
+   "value": 0.044
+  },
+  {
+   "row": "Q04",
+   "doc": "a11y-structure",
+   "value": 0.041
+  },
+  {
+   "row": "Q04",
+   "doc": "ci-flaky",
+   "value": 0.081
+  },
+  {
+   "row": "Q04",
+   "doc": "ci-cache",
+   "value": 0.047
+  },
+  {
+   "row": "Q04",
+   "doc": "ci-env",
+   "value": -0.06
+  },
+  {
+   "row": "Q04",
+   "doc": "ci-lockfile",
+   "value": 0.045
+  },
+  {
+   "row": "Q04",
+   "doc": "ci-disk",
+   "value": 0.131
+  },
+  {
+   "row": "Q04",
+   "doc": "ci-timeouts",
+   "value": 0.068
+  },
+  {
+   "row": "Q04",
+   "doc": "ci-matrix",
+   "value": 0.034
+  },
+  {
+   "row": "Q04",
+   "doc": "generic-troubleshooting",
+   "value": 0.141
+  },
+  {
+   "row": "Q04",
+   "doc": "generic-performance",
+   "value": 0.219
+  },
+  {
+   "row": "Q04",
+   "doc": "generic-overview",
+   "value": -0.014
+  },
+  {
+   "row": "Q04",
+   "doc": "generic-faq",
+   "value": 0.185
+  },
+  {
+   "row": "Q04",
+   "doc": "generic-glossary",
+   "value": 0.154
+  },
+  {
+   "row": "Q04",
+   "doc": "generic-onboarding",
+   "value": 0.105
+  },
+  {
+   "row": "Q04",
+   "doc": "generic-release-notes",
+   "value": 0.148
+  },
+  {
+   "row": "Q04",
+   "doc": "generic-escalation",
+   "value": 0.05
+  },
+  {
+   "row": "Q05",
+   "doc": "serving-cold-start",
+   "value": 0.123
+  },
+  {
+   "row": "Q05",
+   "doc": "serving-batching",
+   "value": 0.281
+  },
+  {
+   "row": "Q05",
+   "doc": "serving-warm-pool",
+   "value": 0.203
+  },
+  {
+   "row": "Q05",
+   "doc": "serving-export",
+   "value": 0.111
+  },
+  {
+   "row": "Q05",
+   "doc": "serving-streaming",
+   "value": 0.097
+  },
+  {
+   "row": "Q05",
+   "doc": "serving-versions",
+   "value": 0.016
+  },
+  {
+   "row": "Q05",
+   "doc": "serving-tokenizer",
+   "value": 0.173
+  },
+  {
+   "row": "Q05",
+   "doc": "gpu-oom-inference",
+   "value": 0.224
+  },
+  {
+   "row": "Q05",
+   "doc": "gpu-quantization",
+   "value": 0.211
+  },
+  {
+   "row": "Q05",
+   "doc": "gpu-kv-cache",
+   "value": 0.272
+  },
+  {
+   "row": "Q05",
+   "doc": "gpu-checkpointing",
+   "value": 0.223
+  },
+  {
+   "row": "Q05",
+   "doc": "gpu-measuring",
+   "value": 0.637
+  },
+  {
+   "row": "Q05",
+   "doc": "gpu-mixed-precision",
+   "value": 0.258
+  },
+  {
+   "row": "Q05",
+   "doc": "gpu-fragmentation",
+   "value": 0.338
+  },
+  {
+   "row": "Q05",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.047
+  },
+  {
+   "row": "Q05",
+   "doc": "chunking-overlap",
+   "value": 0.127
+  },
+  {
+   "row": "Q05",
+   "doc": "chunking-truncation",
+   "value": 0.142
+  },
+  {
+   "row": "Q05",
+   "doc": "chunking-metadata",
+   "value": 0.096
+  },
+  {
+   "row": "Q05",
+   "doc": "chunking-tables",
+   "value": 0.063
+  },
+  {
+   "row": "Q05",
+   "doc": "chunking-dedup",
+   "value": 0.135
+  },
+  {
+   "row": "Q05",
+   "doc": "chunking-parent",
+   "value": 0.173
+  },
+  {
+   "row": "Q05",
+   "doc": "indexing-column-order",
+   "value": -0.023
+  },
+  {
+   "row": "Q05",
+   "doc": "indexing-unused",
+   "value": 0.165
+  },
+  {
+   "row": "Q05",
+   "doc": "indexing-write-cost",
+   "value": 0.166
+  },
+  {
+   "row": "Q05",
+   "doc": "indexing-partial",
+   "value": 0.1
+  },
+  {
+   "row": "Q05",
+   "doc": "indexing-explain",
+   "value": 0.26
+  },
+  {
+   "row": "Q05",
+   "doc": "indexing-bloat",
+   "value": 0.227
+  },
+  {
+   "row": "Q05",
+   "doc": "indexing-covering",
+   "value": 0.168
+  },
+  {
+   "row": "Q05",
+   "doc": "a11y-focus",
+   "value": 0.031
+  },
+  {
+   "row": "Q05",
+   "doc": "a11y-contrast",
+   "value": 0.009
+  },
+  {
+   "row": "Q05",
+   "doc": "a11y-labels",
+   "value": 0.087
+  },
+  {
+   "row": "Q05",
+   "doc": "a11y-modal",
+   "value": 0.002
+  },
+  {
+   "row": "Q05",
+   "doc": "a11y-alt-text",
+   "value": -0.049
+  },
+  {
+   "row": "Q05",
+   "doc": "a11y-motion",
+   "value": 0.012
+  },
+  {
+   "row": "Q05",
+   "doc": "a11y-structure",
+   "value": 0.032
+  },
+  {
+   "row": "Q05",
+   "doc": "ci-flaky",
+   "value": 0.048
+  },
+  {
+   "row": "Q05",
+   "doc": "ci-cache",
+   "value": 0.108
+  },
+  {
+   "row": "Q05",
+   "doc": "ci-env",
+   "value": 0.212
+  },
+  {
+   "row": "Q05",
+   "doc": "ci-lockfile",
+   "value": -0.015
+  },
+  {
+   "row": "Q05",
+   "doc": "ci-disk",
+   "value": 0.28
+  },
+  {
+   "row": "Q05",
+   "doc": "ci-timeouts",
+   "value": 0.121
+  },
+  {
+   "row": "Q05",
+   "doc": "ci-matrix",
+   "value": 0.177
+  },
+  {
+   "row": "Q05",
+   "doc": "generic-troubleshooting",
+   "value": 0.117
+  },
+  {
+   "row": "Q05",
+   "doc": "generic-performance",
+   "value": 0.114
+  },
+  {
+   "row": "Q05",
+   "doc": "generic-overview",
+   "value": 0.035
+  },
+  {
+   "row": "Q05",
+   "doc": "generic-faq",
+   "value": 0.096
+  },
+  {
+   "row": "Q05",
+   "doc": "generic-glossary",
+   "value": 0.184
+  },
+  {
+   "row": "Q05",
+   "doc": "generic-onboarding",
+   "value": 0.047
+  },
+  {
+   "row": "Q05",
+   "doc": "generic-release-notes",
+   "value": 0.157
+  },
+  {
+   "row": "Q05",
+   "doc": "generic-escalation",
+   "value": 0.252
+  },
+  {
+   "row": "Q06",
+   "doc": "serving-cold-start",
+   "value": 0.14
+  },
+  {
+   "row": "Q06",
+   "doc": "serving-batching",
+   "value": 0.054
+  },
+  {
+   "row": "Q06",
+   "doc": "serving-warm-pool",
+   "value": 0.063
+  },
+  {
+   "row": "Q06",
+   "doc": "serving-export",
+   "value": 0.08
+  },
+  {
+   "row": "Q06",
+   "doc": "serving-streaming",
+   "value": 0.214
+  },
+  {
+   "row": "Q06",
+   "doc": "serving-versions",
+   "value": 0.047
+  },
+  {
+   "row": "Q06",
+   "doc": "serving-tokenizer",
+   "value": 0.075
+  },
+  {
+   "row": "Q06",
+   "doc": "gpu-oom-inference",
+   "value": 0.182
+  },
+  {
+   "row": "Q06",
+   "doc": "gpu-quantization",
+   "value": 0.251
+  },
+  {
+   "row": "Q06",
+   "doc": "gpu-kv-cache",
+   "value": 0.183
+  },
+  {
+   "row": "Q06",
+   "doc": "gpu-checkpointing",
+   "value": 0.153
+  },
+  {
+   "row": "Q06",
+   "doc": "gpu-measuring",
+   "value": 0.084
+  },
+  {
+   "row": "Q06",
+   "doc": "gpu-mixed-precision",
+   "value": 0.253
+  },
+  {
+   "row": "Q06",
+   "doc": "gpu-fragmentation",
+   "value": 0.274
+  },
+  {
+   "row": "Q06",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.495
+  },
+  {
+   "row": "Q06",
+   "doc": "chunking-overlap",
+   "value": 0.308
+  },
+  {
+   "row": "Q06",
+   "doc": "chunking-truncation",
+   "value": 0.526
+  },
+  {
+   "row": "Q06",
+   "doc": "chunking-metadata",
+   "value": 0.365
+  },
+  {
+   "row": "Q06",
+   "doc": "chunking-tables",
+   "value": 0.318
+  },
+  {
+   "row": "Q06",
+   "doc": "chunking-dedup",
+   "value": 0.207
+  },
+  {
+   "row": "Q06",
+   "doc": "chunking-parent",
+   "value": 0.537
+  },
+  {
+   "row": "Q06",
+   "doc": "indexing-column-order",
+   "value": 0.051
+  },
+  {
+   "row": "Q06",
+   "doc": "indexing-unused",
+   "value": -0.018
+  },
+  {
+   "row": "Q06",
+   "doc": "indexing-write-cost",
+   "value": 0.104
+  },
+  {
+   "row": "Q06",
+   "doc": "indexing-partial",
+   "value": 0.099
+  },
+  {
+   "row": "Q06",
+   "doc": "indexing-explain",
+   "value": 0.003
+  },
+  {
+   "row": "Q06",
+   "doc": "indexing-bloat",
+   "value": 0.096
+  },
+  {
+   "row": "Q06",
+   "doc": "indexing-covering",
+   "value": 0.109
+  },
+  {
+   "row": "Q06",
+   "doc": "a11y-focus",
+   "value": -0.165
+  },
+  {
+   "row": "Q06",
+   "doc": "a11y-contrast",
+   "value": 0.21
+  },
+  {
+   "row": "Q06",
+   "doc": "a11y-labels",
+   "value": 0.018
+  },
+  {
+   "row": "Q06",
+   "doc": "a11y-modal",
+   "value": -0.051
+  },
+  {
+   "row": "Q06",
+   "doc": "a11y-alt-text",
+   "value": 0.156
+  },
+  {
+   "row": "Q06",
+   "doc": "a11y-motion",
+   "value": 0.008
+  },
+  {
+   "row": "Q06",
+   "doc": "a11y-structure",
+   "value": 0.126
+  },
+  {
+   "row": "Q06",
+   "doc": "ci-flaky",
+   "value": 0.001
+  },
+  {
+   "row": "Q06",
+   "doc": "ci-cache",
+   "value": -0.007
+  },
+  {
+   "row": "Q06",
+   "doc": "ci-env",
+   "value": 0.021
+  },
+  {
+   "row": "Q06",
+   "doc": "ci-lockfile",
+   "value": 0.009
+  },
+  {
+   "row": "Q06",
+   "doc": "ci-disk",
+   "value": 0.128
+  },
+  {
+   "row": "Q06",
+   "doc": "ci-timeouts",
+   "value": 0.096
+  },
+  {
+   "row": "Q06",
+   "doc": "ci-matrix",
+   "value": 0.071
+  },
+  {
+   "row": "Q06",
+   "doc": "generic-troubleshooting",
+   "value": 0.036
+  },
+  {
+   "row": "Q06",
+   "doc": "generic-performance",
+   "value": 0.047
+  },
+  {
+   "row": "Q06",
+   "doc": "generic-overview",
+   "value": 0.153
+  },
+  {
+   "row": "Q06",
+   "doc": "generic-faq",
+   "value": 0.107
+  },
+  {
+   "row": "Q06",
+   "doc": "generic-glossary",
+   "value": 0.129
+  },
+  {
+   "row": "Q06",
+   "doc": "generic-onboarding",
+   "value": -0.065
+  },
+  {
+   "row": "Q06",
+   "doc": "generic-release-notes",
+   "value": -0.05
+  },
+  {
+   "row": "Q06",
+   "doc": "generic-escalation",
+   "value": 0.016
+  },
+  {
+   "row": "Q07",
+   "doc": "serving-cold-start",
+   "value": -0.134
+  },
+  {
+   "row": "Q07",
+   "doc": "serving-batching",
+   "value": -0.034
+  },
+  {
+   "row": "Q07",
+   "doc": "serving-warm-pool",
+   "value": -0.051
+  },
+  {
+   "row": "Q07",
+   "doc": "serving-export",
+   "value": -0.023
+  },
+  {
+   "row": "Q07",
+   "doc": "serving-streaming",
+   "value": 0.007
+  },
+  {
+   "row": "Q07",
+   "doc": "serving-versions",
+   "value": 0.029
+  },
+  {
+   "row": "Q07",
+   "doc": "serving-tokenizer",
+   "value": 0.17
+  },
+  {
+   "row": "Q07",
+   "doc": "gpu-oom-inference",
+   "value": 0.059
+  },
+  {
+   "row": "Q07",
+   "doc": "gpu-quantization",
+   "value": -0.001
+  },
+  {
+   "row": "Q07",
+   "doc": "gpu-kv-cache",
+   "value": -0.013
+  },
+  {
+   "row": "Q07",
+   "doc": "gpu-checkpointing",
+   "value": 0.09
+  },
+  {
+   "row": "Q07",
+   "doc": "gpu-measuring",
+   "value": 0.025
+  },
+  {
+   "row": "Q07",
+   "doc": "gpu-mixed-precision",
+   "value": 0.109
+  },
+  {
+   "row": "Q07",
+   "doc": "gpu-fragmentation",
+   "value": 0.246
+  },
+  {
+   "row": "Q07",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.388
+  },
+  {
+   "row": "Q07",
+   "doc": "chunking-overlap",
+   "value": 0.253
+  },
+  {
+   "row": "Q07",
+   "doc": "chunking-truncation",
+   "value": 0.303
+  },
+  {
+   "row": "Q07",
+   "doc": "chunking-metadata",
+   "value": 0.339
+  },
+  {
+   "row": "Q07",
+   "doc": "chunking-tables",
+   "value": 0.743
+  },
+  {
+   "row": "Q07",
+   "doc": "chunking-dedup",
+   "value": 0.212
+  },
+  {
+   "row": "Q07",
+   "doc": "chunking-parent",
+   "value": 0.244
+  },
+  {
+   "row": "Q07",
+   "doc": "indexing-column-order",
+   "value": 0.091
+  },
+  {
+   "row": "Q07",
+   "doc": "indexing-unused",
+   "value": 0.101
+  },
+  {
+   "row": "Q07",
+   "doc": "indexing-write-cost",
+   "value": 0.11
+  },
+  {
+   "row": "Q07",
+   "doc": "indexing-partial",
+   "value": 0.076
+  },
+  {
+   "row": "Q07",
+   "doc": "indexing-explain",
+   "value": 0.169
+  },
+  {
+   "row": "Q07",
+   "doc": "indexing-bloat",
+   "value": 0.224
+  },
+  {
+   "row": "Q07",
+   "doc": "indexing-covering",
+   "value": 0.068
+  },
+  {
+   "row": "Q07",
+   "doc": "a11y-focus",
+   "value": -0.016
+  },
+  {
+   "row": "Q07",
+   "doc": "a11y-contrast",
+   "value": -0.014
+  },
+  {
+   "row": "Q07",
+   "doc": "a11y-labels",
+   "value": -0.042
+  },
+  {
+   "row": "Q07",
+   "doc": "a11y-modal",
+   "value": 0.036
+  },
+  {
+   "row": "Q07",
+   "doc": "a11y-alt-text",
+   "value": -0.108
+  },
+  {
+   "row": "Q07",
+   "doc": "a11y-motion",
+   "value": -0.043
+  },
+  {
+   "row": "Q07",
+   "doc": "a11y-structure",
+   "value": 0.063
+  },
+  {
+   "row": "Q07",
+   "doc": "ci-flaky",
+   "value": 0.016
+  },
+  {
+   "row": "Q07",
+   "doc": "ci-cache",
+   "value": 0.022
+  },
+  {
+   "row": "Q07",
+   "doc": "ci-env",
+   "value": 0.056
+  },
+  {
+   "row": "Q07",
+   "doc": "ci-lockfile",
+   "value": 0.076
+  },
+  {
+   "row": "Q07",
+   "doc": "ci-disk",
+   "value": 0.104
+  },
+  {
+   "row": "Q07",
+   "doc": "ci-timeouts",
+   "value": 0.164
+  },
+  {
+   "row": "Q07",
+   "doc": "ci-matrix",
+   "value": 0.211
+  },
+  {
+   "row": "Q07",
+   "doc": "generic-troubleshooting",
+   "value": 0.141
+  },
+  {
+   "row": "Q07",
+   "doc": "generic-performance",
+   "value": -0.033
+  },
+  {
+   "row": "Q07",
+   "doc": "generic-overview",
+   "value": -0.106
+  },
+  {
+   "row": "Q07",
+   "doc": "generic-faq",
+   "value": 0.028
+  },
+  {
+   "row": "Q07",
+   "doc": "generic-glossary",
+   "value": -0.147
+  },
+  {
+   "row": "Q07",
+   "doc": "generic-onboarding",
+   "value": 0
+  },
+  {
+   "row": "Q07",
+   "doc": "generic-release-notes",
+   "value": -0.105
+  },
+  {
+   "row": "Q07",
+   "doc": "generic-escalation",
+   "value": 0.106
+  },
+  {
+   "row": "Q08",
+   "doc": "serving-cold-start",
+   "value": 0.113
+  },
+  {
+   "row": "Q08",
+   "doc": "serving-batching",
+   "value": 0.065
+  },
+  {
+   "row": "Q08",
+   "doc": "serving-warm-pool",
+   "value": 0.076
+  },
+  {
+   "row": "Q08",
+   "doc": "serving-export",
+   "value": 0.133
+  },
+  {
+   "row": "Q08",
+   "doc": "serving-streaming",
+   "value": 0.175
+  },
+  {
+   "row": "Q08",
+   "doc": "serving-versions",
+   "value": 0.163
+  },
+  {
+   "row": "Q08",
+   "doc": "serving-tokenizer",
+   "value": 0.303
+  },
+  {
+   "row": "Q08",
+   "doc": "gpu-oom-inference",
+   "value": 0.164
+  },
+  {
+   "row": "Q08",
+   "doc": "gpu-quantization",
+   "value": -0.093
+  },
+  {
+   "row": "Q08",
+   "doc": "gpu-kv-cache",
+   "value": 0.07
+  },
+  {
+   "row": "Q08",
+   "doc": "gpu-checkpointing",
+   "value": 0.084
+  },
+  {
+   "row": "Q08",
+   "doc": "gpu-measuring",
+   "value": 0.084
+  },
+  {
+   "row": "Q08",
+   "doc": "gpu-mixed-precision",
+   "value": -0.054
+  },
+  {
+   "row": "Q08",
+   "doc": "gpu-fragmentation",
+   "value": 0.051
+  },
+  {
+   "row": "Q08",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.243
+  },
+  {
+   "row": "Q08",
+   "doc": "chunking-overlap",
+   "value": 0.273
+  },
+  {
+   "row": "Q08",
+   "doc": "chunking-truncation",
+   "value": 0.249
+  },
+  {
+   "row": "Q08",
+   "doc": "chunking-metadata",
+   "value": 0.314
+  },
+  {
+   "row": "Q08",
+   "doc": "chunking-tables",
+   "value": 0.161
+  },
+  {
+   "row": "Q08",
+   "doc": "chunking-dedup",
+   "value": 0.47
+  },
+  {
+   "row": "Q08",
+   "doc": "chunking-parent",
+   "value": 0.234
+  },
+  {
+   "row": "Q08",
+   "doc": "indexing-column-order",
+   "value": 0.157
+  },
+  {
+   "row": "Q08",
+   "doc": "indexing-unused",
+   "value": 0.238
+  },
+  {
+   "row": "Q08",
+   "doc": "indexing-write-cost",
+   "value": -0.032
+  },
+  {
+   "row": "Q08",
+   "doc": "indexing-partial",
+   "value": 0.097
+  },
+  {
+   "row": "Q08",
+   "doc": "indexing-explain",
+   "value": 0.277
+  },
+  {
+   "row": "Q08",
+   "doc": "indexing-bloat",
+   "value": 0.126
+  },
+  {
+   "row": "Q08",
+   "doc": "indexing-covering",
+   "value": 0.153
+  },
+  {
+   "row": "Q08",
+   "doc": "a11y-focus",
+   "value": 0.072
+  },
+  {
+   "row": "Q08",
+   "doc": "a11y-contrast",
+   "value": 0.154
+  },
+  {
+   "row": "Q08",
+   "doc": "a11y-labels",
+   "value": 0.217
+  },
+  {
+   "row": "Q08",
+   "doc": "a11y-modal",
+   "value": 0.121
+  },
+  {
+   "row": "Q08",
+   "doc": "a11y-alt-text",
+   "value": 0.136
+  },
+  {
+   "row": "Q08",
+   "doc": "a11y-motion",
+   "value": 0.041
+  },
+  {
+   "row": "Q08",
+   "doc": "a11y-structure",
+   "value": 0.153
+  },
+  {
+   "row": "Q08",
+   "doc": "ci-flaky",
+   "value": 0.21
+  },
+  {
+   "row": "Q08",
+   "doc": "ci-cache",
+   "value": 0.198
+  },
+  {
+   "row": "Q08",
+   "doc": "ci-env",
+   "value": 0.396
+  },
+  {
+   "row": "Q08",
+   "doc": "ci-lockfile",
+   "value": 0.086
+  },
+  {
+   "row": "Q08",
+   "doc": "ci-disk",
+   "value": 0.16
+  },
+  {
+   "row": "Q08",
+   "doc": "ci-timeouts",
+   "value": 0.234
+  },
+  {
+   "row": "Q08",
+   "doc": "ci-matrix",
+   "value": 0.166
+  },
+  {
+   "row": "Q08",
+   "doc": "generic-troubleshooting",
+   "value": 0.159
+  },
+  {
+   "row": "Q08",
+   "doc": "generic-performance",
+   "value": -0.013
+  },
+  {
+   "row": "Q08",
+   "doc": "generic-overview",
+   "value": 0.132
+  },
+  {
+   "row": "Q08",
+   "doc": "generic-faq",
+   "value": 0.119
+  },
+  {
+   "row": "Q08",
+   "doc": "generic-glossary",
+   "value": -0.008
+  },
+  {
+   "row": "Q08",
+   "doc": "generic-onboarding",
+   "value": 0.13
+  },
+  {
+   "row": "Q08",
+   "doc": "generic-release-notes",
+   "value": 0.082
+  },
+  {
+   "row": "Q08",
+   "doc": "generic-escalation",
+   "value": 0.264
+  },
+  {
+   "row": "Q09",
+   "doc": "serving-cold-start",
+   "value": 0.131
+  },
+  {
+   "row": "Q09",
+   "doc": "serving-batching",
+   "value": 0.1
+  },
+  {
+   "row": "Q09",
+   "doc": "serving-warm-pool",
+   "value": 0.104
+  },
+  {
+   "row": "Q09",
+   "doc": "serving-export",
+   "value": 0.046
+  },
+  {
+   "row": "Q09",
+   "doc": "serving-streaming",
+   "value": -0.029
+  },
+  {
+   "row": "Q09",
+   "doc": "serving-versions",
+   "value": 0.038
+  },
+  {
+   "row": "Q09",
+   "doc": "serving-tokenizer",
+   "value": 0.142
+  },
+  {
+   "row": "Q09",
+   "doc": "gpu-oom-inference",
+   "value": 0.117
+  },
+  {
+   "row": "Q09",
+   "doc": "gpu-quantization",
+   "value": -0.033
+  },
+  {
+   "row": "Q09",
+   "doc": "gpu-kv-cache",
+   "value": 0.163
+  },
+  {
+   "row": "Q09",
+   "doc": "gpu-checkpointing",
+   "value": 0.132
+  },
+  {
+   "row": "Q09",
+   "doc": "gpu-measuring",
+   "value": 0.118
+  },
+  {
+   "row": "Q09",
+   "doc": "gpu-mixed-precision",
+   "value": 0.035
+  },
+  {
+   "row": "Q09",
+   "doc": "gpu-fragmentation",
+   "value": 0.082
+  },
+  {
+   "row": "Q09",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.019
+  },
+  {
+   "row": "Q09",
+   "doc": "chunking-overlap",
+   "value": 0.227
+  },
+  {
+   "row": "Q09",
+   "doc": "chunking-truncation",
+   "value": 0.219
+  },
+  {
+   "row": "Q09",
+   "doc": "chunking-metadata",
+   "value": 0.104
+  },
+  {
+   "row": "Q09",
+   "doc": "chunking-tables",
+   "value": 0.048
+  },
+  {
+   "row": "Q09",
+   "doc": "chunking-dedup",
+   "value": 0.36
+  },
+  {
+   "row": "Q09",
+   "doc": "chunking-parent",
+   "value": 0.201
+  },
+  {
+   "row": "Q09",
+   "doc": "indexing-column-order",
+   "value": 0.399
+  },
+  {
+   "row": "Q09",
+   "doc": "indexing-unused",
+   "value": 0.573
+  },
+  {
+   "row": "Q09",
+   "doc": "indexing-write-cost",
+   "value": 0.262
+  },
+  {
+   "row": "Q09",
+   "doc": "indexing-partial",
+   "value": 0.447
+  },
+  {
+   "row": "Q09",
+   "doc": "indexing-explain",
+   "value": 0.366
+  },
+  {
+   "row": "Q09",
+   "doc": "indexing-bloat",
+   "value": 0.456
+  },
+  {
+   "row": "Q09",
+   "doc": "indexing-covering",
+   "value": 0.519
+  },
+  {
+   "row": "Q09",
+   "doc": "a11y-focus",
+   "value": 0.159
+  },
+  {
+   "row": "Q09",
+   "doc": "a11y-contrast",
+   "value": -0.016
+  },
+  {
+   "row": "Q09",
+   "doc": "a11y-labels",
+   "value": 0.01
+  },
+  {
+   "row": "Q09",
+   "doc": "a11y-modal",
+   "value": 0.068
+  },
+  {
+   "row": "Q09",
+   "doc": "a11y-alt-text",
+   "value": 0.048
+  },
+  {
+   "row": "Q09",
+   "doc": "a11y-motion",
+   "value": 0.091
+  },
+  {
+   "row": "Q09",
+   "doc": "a11y-structure",
+   "value": 0.116
+  },
+  {
+   "row": "Q09",
+   "doc": "ci-flaky",
+   "value": 0.205
+  },
+  {
+   "row": "Q09",
+   "doc": "ci-cache",
+   "value": 0.205
+  },
+  {
+   "row": "Q09",
+   "doc": "ci-env",
+   "value": 0.18
+  },
+  {
+   "row": "Q09",
+   "doc": "ci-lockfile",
+   "value": 0.084
+  },
+  {
+   "row": "Q09",
+   "doc": "ci-disk",
+   "value": 0.123
+  },
+  {
+   "row": "Q09",
+   "doc": "ci-timeouts",
+   "value": 0.158
+  },
+  {
+   "row": "Q09",
+   "doc": "ci-matrix",
+   "value": 0.213
+  },
+  {
+   "row": "Q09",
+   "doc": "generic-troubleshooting",
+   "value": 0.075
+  },
+  {
+   "row": "Q09",
+   "doc": "generic-performance",
+   "value": 0.154
+  },
+  {
+   "row": "Q09",
+   "doc": "generic-overview",
+   "value": -0.091
+  },
+  {
+   "row": "Q09",
+   "doc": "generic-faq",
+   "value": 0.037
+  },
+  {
+   "row": "Q09",
+   "doc": "generic-glossary",
+   "value": 0.027
+  },
+  {
+   "row": "Q09",
+   "doc": "generic-onboarding",
+   "value": 0.081
+  },
+  {
+   "row": "Q09",
+   "doc": "generic-release-notes",
+   "value": 0.022
+  },
+  {
+   "row": "Q09",
+   "doc": "generic-escalation",
+   "value": 0.163
+  },
+  {
+   "row": "Q10",
+   "doc": "serving-cold-start",
+   "value": 0.244
+  },
+  {
+   "row": "Q10",
+   "doc": "serving-batching",
+   "value": 0.197
+  },
+  {
+   "row": "Q10",
+   "doc": "serving-warm-pool",
+   "value": 0.121
+  },
+  {
+   "row": "Q10",
+   "doc": "serving-export",
+   "value": 0.087
+  },
+  {
+   "row": "Q10",
+   "doc": "serving-streaming",
+   "value": 0.007
+  },
+  {
+   "row": "Q10",
+   "doc": "serving-versions",
+   "value": -0.01
+  },
+  {
+   "row": "Q10",
+   "doc": "serving-tokenizer",
+   "value": 0.112
+  },
+  {
+   "row": "Q10",
+   "doc": "gpu-oom-inference",
+   "value": 0.174
+  },
+  {
+   "row": "Q10",
+   "doc": "gpu-quantization",
+   "value": 0.139
+  },
+  {
+   "row": "Q10",
+   "doc": "gpu-kv-cache",
+   "value": 0.225
+  },
+  {
+   "row": "Q10",
+   "doc": "gpu-checkpointing",
+   "value": 0.215
+  },
+  {
+   "row": "Q10",
+   "doc": "gpu-measuring",
+   "value": 0.149
+  },
+  {
+   "row": "Q10",
+   "doc": "gpu-mixed-precision",
+   "value": 0.152
+  },
+  {
+   "row": "Q10",
+   "doc": "gpu-fragmentation",
+   "value": 0.258
+  },
+  {
+   "row": "Q10",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.104
+  },
+  {
+   "row": "Q10",
+   "doc": "chunking-overlap",
+   "value": 0.325
+  },
+  {
+   "row": "Q10",
+   "doc": "chunking-truncation",
+   "value": 0.162
+  },
+  {
+   "row": "Q10",
+   "doc": "chunking-metadata",
+   "value": 0.14
+  },
+  {
+   "row": "Q10",
+   "doc": "chunking-tables",
+   "value": 0.044
+  },
+  {
+   "row": "Q10",
+   "doc": "chunking-dedup",
+   "value": 0.44
+  },
+  {
+   "row": "Q10",
+   "doc": "chunking-parent",
+   "value": 0.282
+  },
+  {
+   "row": "Q10",
+   "doc": "indexing-column-order",
+   "value": 0.337
+  },
+  {
+   "row": "Q10",
+   "doc": "indexing-unused",
+   "value": 0.352
+  },
+  {
+   "row": "Q10",
+   "doc": "indexing-write-cost",
+   "value": 0.46
+  },
+  {
+   "row": "Q10",
+   "doc": "indexing-partial",
+   "value": 0.355
+  },
+  {
+   "row": "Q10",
+   "doc": "indexing-explain",
+   "value": 0.37
+  },
+  {
+   "row": "Q10",
+   "doc": "indexing-bloat",
+   "value": 0.453
+  },
+  {
+   "row": "Q10",
+   "doc": "indexing-covering",
+   "value": 0.438
+  },
+  {
+   "row": "Q10",
+   "doc": "a11y-focus",
+   "value": 0.082
+  },
+  {
+   "row": "Q10",
+   "doc": "a11y-contrast",
+   "value": 0.025
+  },
+  {
+   "row": "Q10",
+   "doc": "a11y-labels",
+   "value": 0.003
+  },
+  {
+   "row": "Q10",
+   "doc": "a11y-modal",
+   "value": 0.121
+  },
+  {
+   "row": "Q10",
+   "doc": "a11y-alt-text",
+   "value": -0.006
+  },
+  {
+   "row": "Q10",
+   "doc": "a11y-motion",
+   "value": 0.071
+  },
+  {
+   "row": "Q10",
+   "doc": "a11y-structure",
+   "value": 0.099
+  },
+  {
+   "row": "Q10",
+   "doc": "ci-flaky",
+   "value": 0.175
+  },
+  {
+   "row": "Q10",
+   "doc": "ci-cache",
+   "value": 0.202
+  },
+  {
+   "row": "Q10",
+   "doc": "ci-env",
+   "value": 0.124
+  },
+  {
+   "row": "Q10",
+   "doc": "ci-lockfile",
+   "value": 0.107
+  },
+  {
+   "row": "Q10",
+   "doc": "ci-disk",
+   "value": 0.253
+  },
+  {
+   "row": "Q10",
+   "doc": "ci-timeouts",
+   "value": 0.254
+  },
+  {
+   "row": "Q10",
+   "doc": "ci-matrix",
+   "value": 0.17
+  },
+  {
+   "row": "Q10",
+   "doc": "generic-troubleshooting",
+   "value": 0.144
+  },
+  {
+   "row": "Q10",
+   "doc": "generic-performance",
+   "value": 0.317
+  },
+  {
+   "row": "Q10",
+   "doc": "generic-overview",
+   "value": -0.098
+  },
+  {
+   "row": "Q10",
+   "doc": "generic-faq",
+   "value": 0.13
+  },
+  {
+   "row": "Q10",
+   "doc": "generic-glossary",
+   "value": 0.065
+  },
+  {
+   "row": "Q10",
+   "doc": "generic-onboarding",
+   "value": 0.062
+  },
+  {
+   "row": "Q10",
+   "doc": "generic-release-notes",
+   "value": 0.105
+  },
+  {
+   "row": "Q10",
+   "doc": "generic-escalation",
+   "value": 0.058
+  },
+  {
+   "row": "Q11",
+   "doc": "serving-cold-start",
+   "value": 0.001
+  },
+  {
+   "row": "Q11",
+   "doc": "serving-batching",
+   "value": 0.074
+  },
+  {
+   "row": "Q11",
+   "doc": "serving-warm-pool",
+   "value": 0.002
+  },
+  {
+   "row": "Q11",
+   "doc": "serving-export",
+   "value": 0.029
+  },
+  {
+   "row": "Q11",
+   "doc": "serving-streaming",
+   "value": 0.011
+  },
+  {
+   "row": "Q11",
+   "doc": "serving-versions",
+   "value": 0.066
+  },
+  {
+   "row": "Q11",
+   "doc": "serving-tokenizer",
+   "value": -0.068
+  },
+  {
+   "row": "Q11",
+   "doc": "gpu-oom-inference",
+   "value": -0.069
+  },
+  {
+   "row": "Q11",
+   "doc": "gpu-quantization",
+   "value": 0.142
+  },
+  {
+   "row": "Q11",
+   "doc": "gpu-kv-cache",
+   "value": 0.137
+  },
+  {
+   "row": "Q11",
+   "doc": "gpu-checkpointing",
+   "value": 0.038
+  },
+  {
+   "row": "Q11",
+   "doc": "gpu-measuring",
+   "value": 0.09
+  },
+  {
+   "row": "Q11",
+   "doc": "gpu-mixed-precision",
+   "value": 0.209
+  },
+  {
+   "row": "Q11",
+   "doc": "gpu-fragmentation",
+   "value": 0.141
+  },
+  {
+   "row": "Q11",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.181
+  },
+  {
+   "row": "Q11",
+   "doc": "chunking-overlap",
+   "value": 0.294
+  },
+  {
+   "row": "Q11",
+   "doc": "chunking-truncation",
+   "value": 0.063
+  },
+  {
+   "row": "Q11",
+   "doc": "chunking-metadata",
+   "value": 0.118
+  },
+  {
+   "row": "Q11",
+   "doc": "chunking-tables",
+   "value": 0.143
+  },
+  {
+   "row": "Q11",
+   "doc": "chunking-dedup",
+   "value": 0.271
+  },
+  {
+   "row": "Q11",
+   "doc": "chunking-parent",
+   "value": 0.19
+  },
+  {
+   "row": "Q11",
+   "doc": "indexing-column-order",
+   "value": 0.699
+  },
+  {
+   "row": "Q11",
+   "doc": "indexing-unused",
+   "value": 0.406
+  },
+  {
+   "row": "Q11",
+   "doc": "indexing-write-cost",
+   "value": 0.243
+  },
+  {
+   "row": "Q11",
+   "doc": "indexing-partial",
+   "value": 0.363
+  },
+  {
+   "row": "Q11",
+   "doc": "indexing-explain",
+   "value": 0.292
+  },
+  {
+   "row": "Q11",
+   "doc": "indexing-bloat",
+   "value": 0.256
+  },
+  {
+   "row": "Q11",
+   "doc": "indexing-covering",
+   "value": 0.489
+  },
+  {
+   "row": "Q11",
+   "doc": "a11y-focus",
+   "value": 0.064
+  },
+  {
+   "row": "Q11",
+   "doc": "a11y-contrast",
+   "value": 0.026
+  },
+  {
+   "row": "Q11",
+   "doc": "a11y-labels",
+   "value": -0.002
+  },
+  {
+   "row": "Q11",
+   "doc": "a11y-modal",
+   "value": 0.032
+  },
+  {
+   "row": "Q11",
+   "doc": "a11y-alt-text",
+   "value": -0.015
+  },
+  {
+   "row": "Q11",
+   "doc": "a11y-motion",
+   "value": 0.041
+  },
+  {
+   "row": "Q11",
+   "doc": "a11y-structure",
+   "value": 0.135
+  },
+  {
+   "row": "Q11",
+   "doc": "ci-flaky",
+   "value": 0.098
+  },
+  {
+   "row": "Q11",
+   "doc": "ci-cache",
+   "value": 0.063
+  },
+  {
+   "row": "Q11",
+   "doc": "ci-env",
+   "value": 0.013
+  },
+  {
+   "row": "Q11",
+   "doc": "ci-lockfile",
+   "value": 0.011
+  },
+  {
+   "row": "Q11",
+   "doc": "ci-disk",
+   "value": -0.01
+  },
+  {
+   "row": "Q11",
+   "doc": "ci-timeouts",
+   "value": 0.053
+  },
+  {
+   "row": "Q11",
+   "doc": "ci-matrix",
+   "value": 0.22
+  },
+  {
+   "row": "Q11",
+   "doc": "generic-troubleshooting",
+   "value": -0.068
+  },
+  {
+   "row": "Q11",
+   "doc": "generic-performance",
+   "value": 0.056
+  },
+  {
+   "row": "Q11",
+   "doc": "generic-overview",
+   "value": 0.026
+  },
+  {
+   "row": "Q11",
+   "doc": "generic-faq",
+   "value": 0.063
+  },
+  {
+   "row": "Q11",
+   "doc": "generic-glossary",
+   "value": 0.037
+  },
+  {
+   "row": "Q11",
+   "doc": "generic-onboarding",
+   "value": -0.121
+  },
+  {
+   "row": "Q11",
+   "doc": "generic-release-notes",
+   "value": 0.048
+  },
+  {
+   "row": "Q11",
+   "doc": "generic-escalation",
+   "value": -0.05
+  },
+  {
+   "row": "Q12",
+   "doc": "serving-cold-start",
+   "value": 0.059
+  },
+  {
+   "row": "Q12",
+   "doc": "serving-batching",
+   "value": 0.069
+  },
+  {
+   "row": "Q12",
+   "doc": "serving-warm-pool",
+   "value": 0.003
+  },
+  {
+   "row": "Q12",
+   "doc": "serving-export",
+   "value": 0.001
+  },
+  {
+   "row": "Q12",
+   "doc": "serving-streaming",
+   "value": -0.009
+  },
+  {
+   "row": "Q12",
+   "doc": "serving-versions",
+   "value": 0.014
+  },
+  {
+   "row": "Q12",
+   "doc": "serving-tokenizer",
+   "value": 0.066
+  },
+  {
+   "row": "Q12",
+   "doc": "gpu-oom-inference",
+   "value": 0.157
+  },
+  {
+   "row": "Q12",
+   "doc": "gpu-quantization",
+   "value": -0.002
+  },
+  {
+   "row": "Q12",
+   "doc": "gpu-kv-cache",
+   "value": 0.156
+  },
+  {
+   "row": "Q12",
+   "doc": "gpu-checkpointing",
+   "value": 0.111
+  },
+  {
+   "row": "Q12",
+   "doc": "gpu-measuring",
+   "value": -0.002
+  },
+  {
+   "row": "Q12",
+   "doc": "gpu-mixed-precision",
+   "value": 0
+  },
+  {
+   "row": "Q12",
+   "doc": "gpu-fragmentation",
+   "value": 0.052
+  },
+  {
+   "row": "Q12",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.096
+  },
+  {
+   "row": "Q12",
+   "doc": "chunking-overlap",
+   "value": 0.04
+  },
+  {
+   "row": "Q12",
+   "doc": "chunking-truncation",
+   "value": 0.144
+  },
+  {
+   "row": "Q12",
+   "doc": "chunking-metadata",
+   "value": 0.004
+  },
+  {
+   "row": "Q12",
+   "doc": "chunking-tables",
+   "value": 0.055
+  },
+  {
+   "row": "Q12",
+   "doc": "chunking-dedup",
+   "value": 0.005
+  },
+  {
+   "row": "Q12",
+   "doc": "chunking-parent",
+   "value": -0.045
+  },
+  {
+   "row": "Q12",
+   "doc": "indexing-column-order",
+   "value": -0.077
+  },
+  {
+   "row": "Q12",
+   "doc": "indexing-unused",
+   "value": -0.063
+  },
+  {
+   "row": "Q12",
+   "doc": "indexing-write-cost",
+   "value": 0.025
+  },
+  {
+   "row": "Q12",
+   "doc": "indexing-partial",
+   "value": -0.062
+  },
+  {
+   "row": "Q12",
+   "doc": "indexing-explain",
+   "value": 0.073
+  },
+  {
+   "row": "Q12",
+   "doc": "indexing-bloat",
+   "value": 0.096
+  },
+  {
+   "row": "Q12",
+   "doc": "indexing-covering",
+   "value": -0.02
+  },
+  {
+   "row": "Q12",
+   "doc": "a11y-focus",
+   "value": 0.294
+  },
+  {
+   "row": "Q12",
+   "doc": "a11y-contrast",
+   "value": 0.054
+  },
+  {
+   "row": "Q12",
+   "doc": "a11y-labels",
+   "value": 0.107
+  },
+  {
+   "row": "Q12",
+   "doc": "a11y-modal",
+   "value": 0.707
+  },
+  {
+   "row": "Q12",
+   "doc": "a11y-alt-text",
+   "value": -0.101
+  },
+  {
+   "row": "Q12",
+   "doc": "a11y-motion",
+   "value": 0.213
+  },
+  {
+   "row": "Q12",
+   "doc": "a11y-structure",
+   "value": 0.179
+  },
+  {
+   "row": "Q12",
+   "doc": "ci-flaky",
+   "value": 0.088
+  },
+  {
+   "row": "Q12",
+   "doc": "ci-cache",
+   "value": 0.189
+  },
+  {
+   "row": "Q12",
+   "doc": "ci-env",
+   "value": 0.037
+  },
+  {
+   "row": "Q12",
+   "doc": "ci-lockfile",
+   "value": 0.184
+  },
+  {
+   "row": "Q12",
+   "doc": "ci-disk",
+   "value": 0.064
+  },
+  {
+   "row": "Q12",
+   "doc": "ci-timeouts",
+   "value": 0.058
+  },
+  {
+   "row": "Q12",
+   "doc": "ci-matrix",
+   "value": 0.133
+  },
+  {
+   "row": "Q12",
+   "doc": "generic-troubleshooting",
+   "value": 0.201
+  },
+  {
+   "row": "Q12",
+   "doc": "generic-performance",
+   "value": -0.026
+  },
+  {
+   "row": "Q12",
+   "doc": "generic-overview",
+   "value": -0.072
+  },
+  {
+   "row": "Q12",
+   "doc": "generic-faq",
+   "value": 0.087
+  },
+  {
+   "row": "Q12",
+   "doc": "generic-glossary",
+   "value": -0.065
+  },
+  {
+   "row": "Q12",
+   "doc": "generic-onboarding",
+   "value": 0.047
+  },
+  {
+   "row": "Q12",
+   "doc": "generic-release-notes",
+   "value": -0.027
+  },
+  {
+   "row": "Q12",
+   "doc": "generic-escalation",
+   "value": 0.127
+  },
+  {
+   "row": "Q13",
+   "doc": "serving-cold-start",
+   "value": 0.026
+  },
+  {
+   "row": "Q13",
+   "doc": "serving-batching",
+   "value": 0.042
+  },
+  {
+   "row": "Q13",
+   "doc": "serving-warm-pool",
+   "value": 0.04
+  },
+  {
+   "row": "Q13",
+   "doc": "serving-export",
+   "value": 0.023
+  },
+  {
+   "row": "Q13",
+   "doc": "serving-streaming",
+   "value": -0.02
+  },
+  {
+   "row": "Q13",
+   "doc": "serving-versions",
+   "value": -0.042
+  },
+  {
+   "row": "Q13",
+   "doc": "serving-tokenizer",
+   "value": -0.073
+  },
+  {
+   "row": "Q13",
+   "doc": "gpu-oom-inference",
+   "value": 0.044
+  },
+  {
+   "row": "Q13",
+   "doc": "gpu-quantization",
+   "value": 0.079
+  },
+  {
+   "row": "Q13",
+   "doc": "gpu-kv-cache",
+   "value": 0.033
+  },
+  {
+   "row": "Q13",
+   "doc": "gpu-checkpointing",
+   "value": 0.052
+  },
+  {
+   "row": "Q13",
+   "doc": "gpu-measuring",
+   "value": -0.068
+  },
+  {
+   "row": "Q13",
+   "doc": "gpu-mixed-precision",
+   "value": 0.047
+  },
+  {
+   "row": "Q13",
+   "doc": "gpu-fragmentation",
+   "value": 0.093
+  },
+  {
+   "row": "Q13",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": -0.036
+  },
+  {
+   "row": "Q13",
+   "doc": "chunking-overlap",
+   "value": 0.008
+  },
+  {
+   "row": "Q13",
+   "doc": "chunking-truncation",
+   "value": -0.019
+  },
+  {
+   "row": "Q13",
+   "doc": "chunking-metadata",
+   "value": -0.087
+  },
+  {
+   "row": "Q13",
+   "doc": "chunking-tables",
+   "value": -0.02
+  },
+  {
+   "row": "Q13",
+   "doc": "chunking-dedup",
+   "value": 0.023
+  },
+  {
+   "row": "Q13",
+   "doc": "chunking-parent",
+   "value": -0.036
+  },
+  {
+   "row": "Q13",
+   "doc": "indexing-column-order",
+   "value": -0.015
+  },
+  {
+   "row": "Q13",
+   "doc": "indexing-unused",
+   "value": -0.001
+  },
+  {
+   "row": "Q13",
+   "doc": "indexing-write-cost",
+   "value": 0.079
+  },
+  {
+   "row": "Q13",
+   "doc": "indexing-partial",
+   "value": 0.02
+  },
+  {
+   "row": "Q13",
+   "doc": "indexing-explain",
+   "value": -0.011
+  },
+  {
+   "row": "Q13",
+   "doc": "indexing-bloat",
+   "value": 0.021
+  },
+  {
+   "row": "Q13",
+   "doc": "indexing-covering",
+   "value": 0.056
+  },
+  {
+   "row": "Q13",
+   "doc": "a11y-focus",
+   "value": 0.21
+  },
+  {
+   "row": "Q13",
+   "doc": "a11y-contrast",
+   "value": 0.082
+  },
+  {
+   "row": "Q13",
+   "doc": "a11y-labels",
+   "value": -0.072
+  },
+  {
+   "row": "Q13",
+   "doc": "a11y-modal",
+   "value": 0.143
+  },
+  {
+   "row": "Q13",
+   "doc": "a11y-alt-text",
+   "value": 0.141
+  },
+  {
+   "row": "Q13",
+   "doc": "a11y-motion",
+   "value": 0.56
+  },
+  {
+   "row": "Q13",
+   "doc": "a11y-structure",
+   "value": 0.146
+  },
+  {
+   "row": "Q13",
+   "doc": "ci-flaky",
+   "value": -0.039
+  },
+  {
+   "row": "Q13",
+   "doc": "ci-cache",
+   "value": -0.054
+  },
+  {
+   "row": "Q13",
+   "doc": "ci-env",
+   "value": -0.138
+  },
+  {
+   "row": "Q13",
+   "doc": "ci-lockfile",
+   "value": 0.022
+  },
+  {
+   "row": "Q13",
+   "doc": "ci-disk",
+   "value": 0.015
+  },
+  {
+   "row": "Q13",
+   "doc": "ci-timeouts",
+   "value": -0.04
+  },
+  {
+   "row": "Q13",
+   "doc": "ci-matrix",
+   "value": -0.026
+  },
+  {
+   "row": "Q13",
+   "doc": "generic-troubleshooting",
+   "value": -0.017
+  },
+  {
+   "row": "Q13",
+   "doc": "generic-performance",
+   "value": 0.089
+  },
+  {
+   "row": "Q13",
+   "doc": "generic-overview",
+   "value": -0.069
+  },
+  {
+   "row": "Q13",
+   "doc": "generic-faq",
+   "value": 0.022
+  },
+  {
+   "row": "Q13",
+   "doc": "generic-glossary",
+   "value": -0.074
+  },
+  {
+   "row": "Q13",
+   "doc": "generic-onboarding",
+   "value": -0.099
+  },
+  {
+   "row": "Q13",
+   "doc": "generic-release-notes",
+   "value": 0.041
+  },
+  {
+   "row": "Q13",
+   "doc": "generic-escalation",
+   "value": -0.045
+  },
+  {
+   "row": "Q14",
+   "doc": "serving-cold-start",
+   "value": 0.028
+  },
+  {
+   "row": "Q14",
+   "doc": "serving-batching",
+   "value": 0.049
+  },
+  {
+   "row": "Q14",
+   "doc": "serving-warm-pool",
+   "value": 0.008
+  },
+  {
+   "row": "Q14",
+   "doc": "serving-export",
+   "value": -0.034
+  },
+  {
+   "row": "Q14",
+   "doc": "serving-streaming",
+   "value": 0.067
+  },
+  {
+   "row": "Q14",
+   "doc": "serving-versions",
+   "value": -0.07
+  },
+  {
+   "row": "Q14",
+   "doc": "serving-tokenizer",
+   "value": -0.025
+  },
+  {
+   "row": "Q14",
+   "doc": "gpu-oom-inference",
+   "value": 0.215
+  },
+  {
+   "row": "Q14",
+   "doc": "gpu-quantization",
+   "value": -0.037
+  },
+  {
+   "row": "Q14",
+   "doc": "gpu-kv-cache",
+   "value": 0.061
+  },
+  {
+   "row": "Q14",
+   "doc": "gpu-checkpointing",
+   "value": 0.041
+  },
+  {
+   "row": "Q14",
+   "doc": "gpu-measuring",
+   "value": 0.076
+  },
+  {
+   "row": "Q14",
+   "doc": "gpu-mixed-precision",
+   "value": 0.023
+  },
+  {
+   "row": "Q14",
+   "doc": "gpu-fragmentation",
+   "value": 0.101
+  },
+  {
+   "row": "Q14",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.161
+  },
+  {
+   "row": "Q14",
+   "doc": "chunking-overlap",
+   "value": 0.12
+  },
+  {
+   "row": "Q14",
+   "doc": "chunking-truncation",
+   "value": 0.282
+  },
+  {
+   "row": "Q14",
+   "doc": "chunking-metadata",
+   "value": 0.412
+  },
+  {
+   "row": "Q14",
+   "doc": "chunking-tables",
+   "value": 0.172
+  },
+  {
+   "row": "Q14",
+   "doc": "chunking-dedup",
+   "value": 0.12
+  },
+  {
+   "row": "Q14",
+   "doc": "chunking-parent",
+   "value": 0.133
+  },
+  {
+   "row": "Q14",
+   "doc": "indexing-column-order",
+   "value": -0.039
+  },
+  {
+   "row": "Q14",
+   "doc": "indexing-unused",
+   "value": 0.075
+  },
+  {
+   "row": "Q14",
+   "doc": "indexing-write-cost",
+   "value": -0.013
+  },
+  {
+   "row": "Q14",
+   "doc": "indexing-partial",
+   "value": 0.086
+  },
+  {
+   "row": "Q14",
+   "doc": "indexing-explain",
+   "value": 0.103
+  },
+  {
+   "row": "Q14",
+   "doc": "indexing-bloat",
+   "value": 0.278
+  },
+  {
+   "row": "Q14",
+   "doc": "indexing-covering",
+   "value": 0.194
+  },
+  {
+   "row": "Q14",
+   "doc": "a11y-focus",
+   "value": 0.211
+  },
+  {
+   "row": "Q14",
+   "doc": "a11y-contrast",
+   "value": 0.138
+  },
+  {
+   "row": "Q14",
+   "doc": "a11y-labels",
+   "value": 0.12
+  },
+  {
+   "row": "Q14",
+   "doc": "a11y-modal",
+   "value": 0.161
+  },
+  {
+   "row": "Q14",
+   "doc": "a11y-alt-text",
+   "value": -0.032
+  },
+  {
+   "row": "Q14",
+   "doc": "a11y-motion",
+   "value": 0.221
+  },
+  {
+   "row": "Q14",
+   "doc": "a11y-structure",
+   "value": 0.637
+  },
+  {
+   "row": "Q14",
+   "doc": "ci-flaky",
+   "value": 0.026
+  },
+  {
+   "row": "Q14",
+   "doc": "ci-cache",
+   "value": -0.035
+  },
+  {
+   "row": "Q14",
+   "doc": "ci-env",
+   "value": -0.016
+  },
+  {
+   "row": "Q14",
+   "doc": "ci-lockfile",
+   "value": 0.006
+  },
+  {
+   "row": "Q14",
+   "doc": "ci-disk",
+   "value": 0.123
+  },
+  {
+   "row": "Q14",
+   "doc": "ci-timeouts",
+   "value": 0.152
+  },
+  {
+   "row": "Q14",
+   "doc": "ci-matrix",
+   "value": 0.081
+  },
+  {
+   "row": "Q14",
+   "doc": "generic-troubleshooting",
+   "value": 0.126
+  },
+  {
+   "row": "Q14",
+   "doc": "generic-performance",
+   "value": 0.019
+  },
+  {
+   "row": "Q14",
+   "doc": "generic-overview",
+   "value": 0.021
+  },
+  {
+   "row": "Q14",
+   "doc": "generic-faq",
+   "value": 0.125
+  },
+  {
+   "row": "Q14",
+   "doc": "generic-glossary",
+   "value": -0.001
+  },
+  {
+   "row": "Q14",
+   "doc": "generic-onboarding",
+   "value": -0.016
+  },
+  {
+   "row": "Q14",
+   "doc": "generic-release-notes",
+   "value": 0.007
+  },
+  {
+   "row": "Q14",
+   "doc": "generic-escalation",
+   "value": 0.081
+  },
+  {
+   "row": "Q15",
+   "doc": "serving-cold-start",
+   "value": 0.065
+  },
+  {
+   "row": "Q15",
+   "doc": "serving-batching",
+   "value": -0.05
+  },
+  {
+   "row": "Q15",
+   "doc": "serving-warm-pool",
+   "value": -0.05
+  },
+  {
+   "row": "Q15",
+   "doc": "serving-export",
+   "value": -0.046
+  },
+  {
+   "row": "Q15",
+   "doc": "serving-streaming",
+   "value": -0.009
+  },
+  {
+   "row": "Q15",
+   "doc": "serving-versions",
+   "value": -0.002
+  },
+  {
+   "row": "Q15",
+   "doc": "serving-tokenizer",
+   "value": 0.183
+  },
+  {
+   "row": "Q15",
+   "doc": "gpu-oom-inference",
+   "value": 0
+  },
+  {
+   "row": "Q15",
+   "doc": "gpu-quantization",
+   "value": -0.135
+  },
+  {
+   "row": "Q15",
+   "doc": "gpu-kv-cache",
+   "value": -0.059
+  },
+  {
+   "row": "Q15",
+   "doc": "gpu-checkpointing",
+   "value": 0.067
+  },
+  {
+   "row": "Q15",
+   "doc": "gpu-measuring",
+   "value": 0.061
+  },
+  {
+   "row": "Q15",
+   "doc": "gpu-mixed-precision",
+   "value": -0.069
+  },
+  {
+   "row": "Q15",
+   "doc": "gpu-fragmentation",
+   "value": -0.078
+  },
+  {
+   "row": "Q15",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": -0.092
+  },
+  {
+   "row": "Q15",
+   "doc": "chunking-overlap",
+   "value": -0.11
+  },
+  {
+   "row": "Q15",
+   "doc": "chunking-truncation",
+   "value": -0.026
+  },
+  {
+   "row": "Q15",
+   "doc": "chunking-metadata",
+   "value": -0.018
+  },
+  {
+   "row": "Q15",
+   "doc": "chunking-tables",
+   "value": -0.013
+  },
+  {
+   "row": "Q15",
+   "doc": "chunking-dedup",
+   "value": 0.055
+  },
+  {
+   "row": "Q15",
+   "doc": "chunking-parent",
+   "value": -0.048
+  },
+  {
+   "row": "Q15",
+   "doc": "indexing-column-order",
+   "value": -0.091
+  },
+  {
+   "row": "Q15",
+   "doc": "indexing-unused",
+   "value": -0.045
+  },
+  {
+   "row": "Q15",
+   "doc": "indexing-write-cost",
+   "value": -0.089
+  },
+  {
+   "row": "Q15",
+   "doc": "indexing-partial",
+   "value": -0.096
+  },
+  {
+   "row": "Q15",
+   "doc": "indexing-explain",
+   "value": 0.061
+  },
+  {
+   "row": "Q15",
+   "doc": "indexing-bloat",
+   "value": 0.075
+  },
+  {
+   "row": "Q15",
+   "doc": "indexing-covering",
+   "value": -0.115
+  },
+  {
+   "row": "Q15",
+   "doc": "a11y-focus",
+   "value": -0.154
+  },
+  {
+   "row": "Q15",
+   "doc": "a11y-contrast",
+   "value": 0.066
+  },
+  {
+   "row": "Q15",
+   "doc": "a11y-labels",
+   "value": -0.042
+  },
+  {
+   "row": "Q15",
+   "doc": "a11y-modal",
+   "value": -0.033
+  },
+  {
+   "row": "Q15",
+   "doc": "a11y-alt-text",
+   "value": -0.091
+  },
+  {
+   "row": "Q15",
+   "doc": "a11y-motion",
+   "value": -0.123
+  },
+  {
+   "row": "Q15",
+   "doc": "a11y-structure",
+   "value": -0.044
+  },
+  {
+   "row": "Q15",
+   "doc": "ci-flaky",
+   "value": 0.351
+  },
+  {
+   "row": "Q15",
+   "doc": "ci-cache",
+   "value": 0.129
+  },
+  {
+   "row": "Q15",
+   "doc": "ci-env",
+   "value": 0.286
+  },
+  {
+   "row": "Q15",
+   "doc": "ci-lockfile",
+   "value": 0.213
+  },
+  {
+   "row": "Q15",
+   "doc": "ci-disk",
+   "value": 0.299
+  },
+  {
+   "row": "Q15",
+   "doc": "ci-timeouts",
+   "value": 0.37
+  },
+  {
+   "row": "Q15",
+   "doc": "ci-matrix",
+   "value": 0.165
+  },
+  {
+   "row": "Q15",
+   "doc": "generic-troubleshooting",
+   "value": 0.338
+  },
+  {
+   "row": "Q15",
+   "doc": "generic-performance",
+   "value": 0.042
+  },
+  {
+   "row": "Q15",
+   "doc": "generic-overview",
+   "value": 0.071
+  },
+  {
+   "row": "Q15",
+   "doc": "generic-faq",
+   "value": 0.142
+  },
+  {
+   "row": "Q15",
+   "doc": "generic-glossary",
+   "value": -0.118
+  },
+  {
+   "row": "Q15",
+   "doc": "generic-onboarding",
+   "value": 0.506
+  },
+  {
+   "row": "Q15",
+   "doc": "generic-release-notes",
+   "value": 0.133
+  },
+  {
+   "row": "Q15",
+   "doc": "generic-escalation",
+   "value": 0.307
+  },
+  {
+   "row": "Q16",
+   "doc": "serving-cold-start",
+   "value": 0.068
+  },
+  {
+   "row": "Q16",
+   "doc": "serving-batching",
+   "value": -0.043
+  },
+  {
+   "row": "Q16",
+   "doc": "serving-warm-pool",
+   "value": -0.042
+  },
+  {
+   "row": "Q16",
+   "doc": "serving-export",
+   "value": -0.067
+  },
+  {
+   "row": "Q16",
+   "doc": "serving-streaming",
+   "value": -0.092
+  },
+  {
+   "row": "Q16",
+   "doc": "serving-versions",
+   "value": 0.047
+  },
+  {
+   "row": "Q16",
+   "doc": "serving-tokenizer",
+   "value": 0.184
+  },
+  {
+   "row": "Q16",
+   "doc": "gpu-oom-inference",
+   "value": 0.004
+  },
+  {
+   "row": "Q16",
+   "doc": "gpu-quantization",
+   "value": -0.049
+  },
+  {
+   "row": "Q16",
+   "doc": "gpu-kv-cache",
+   "value": 0.033
+  },
+  {
+   "row": "Q16",
+   "doc": "gpu-checkpointing",
+   "value": 0.065
+  },
+  {
+   "row": "Q16",
+   "doc": "gpu-measuring",
+   "value": -0.027
+  },
+  {
+   "row": "Q16",
+   "doc": "gpu-mixed-precision",
+   "value": -0.032
+  },
+  {
+   "row": "Q16",
+   "doc": "gpu-fragmentation",
+   "value": -0.006
+  },
+  {
+   "row": "Q16",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.003
+  },
+  {
+   "row": "Q16",
+   "doc": "chunking-overlap",
+   "value": 0.015
+  },
+  {
+   "row": "Q16",
+   "doc": "chunking-truncation",
+   "value": 0.009
+  },
+  {
+   "row": "Q16",
+   "doc": "chunking-metadata",
+   "value": -0.063
+  },
+  {
+   "row": "Q16",
+   "doc": "chunking-tables",
+   "value": -0.009
+  },
+  {
+   "row": "Q16",
+   "doc": "chunking-dedup",
+   "value": 0.041
+  },
+  {
+   "row": "Q16",
+   "doc": "chunking-parent",
+   "value": -0.08
+  },
+  {
+   "row": "Q16",
+   "doc": "indexing-column-order",
+   "value": -0.032
+  },
+  {
+   "row": "Q16",
+   "doc": "indexing-unused",
+   "value": 0.028
+  },
+  {
+   "row": "Q16",
+   "doc": "indexing-write-cost",
+   "value": -0.135
+  },
+  {
+   "row": "Q16",
+   "doc": "indexing-partial",
+   "value": -0.069
+  },
+  {
+   "row": "Q16",
+   "doc": "indexing-explain",
+   "value": 0.106
+  },
+  {
+   "row": "Q16",
+   "doc": "indexing-bloat",
+   "value": 0.114
+  },
+  {
+   "row": "Q16",
+   "doc": "indexing-covering",
+   "value": -0.058
+  },
+  {
+   "row": "Q16",
+   "doc": "a11y-focus",
+   "value": -0.05
+  },
+  {
+   "row": "Q16",
+   "doc": "a11y-contrast",
+   "value": -0.133
+  },
+  {
+   "row": "Q16",
+   "doc": "a11y-labels",
+   "value": -0.068
+  },
+  {
+   "row": "Q16",
+   "doc": "a11y-modal",
+   "value": -0.004
+  },
+  {
+   "row": "Q16",
+   "doc": "a11y-alt-text",
+   "value": -0.075
+  },
+  {
+   "row": "Q16",
+   "doc": "a11y-motion",
+   "value": -0.076
+  },
+  {
+   "row": "Q16",
+   "doc": "a11y-structure",
+   "value": -0.115
+  },
+  {
+   "row": "Q16",
+   "doc": "ci-flaky",
+   "value": 0.13
+  },
+  {
+   "row": "Q16",
+   "doc": "ci-cache",
+   "value": 0.287
+  },
+  {
+   "row": "Q16",
+   "doc": "ci-env",
+   "value": 0.2
+  },
+  {
+   "row": "Q16",
+   "doc": "ci-lockfile",
+   "value": 0.719
+  },
+  {
+   "row": "Q16",
+   "doc": "ci-disk",
+   "value": 0.099
+  },
+  {
+   "row": "Q16",
+   "doc": "ci-timeouts",
+   "value": 0.17
+  },
+  {
+   "row": "Q16",
+   "doc": "ci-matrix",
+   "value": 0.153
+  },
+  {
+   "row": "Q16",
+   "doc": "generic-troubleshooting",
+   "value": 0.196
+  },
+  {
+   "row": "Q16",
+   "doc": "generic-performance",
+   "value": -0.052
+  },
+  {
+   "row": "Q16",
+   "doc": "generic-overview",
+   "value": -0.006
+  },
+  {
+   "row": "Q16",
+   "doc": "generic-faq",
+   "value": 0.002
+  },
+  {
+   "row": "Q16",
+   "doc": "generic-glossary",
+   "value": -0.085
+  },
+  {
+   "row": "Q16",
+   "doc": "generic-onboarding",
+   "value": 0.26
+  },
+  {
+   "row": "Q16",
+   "doc": "generic-release-notes",
+   "value": 0.173
+  },
+  {
+   "row": "Q16",
+   "doc": "generic-escalation",
+   "value": 0.318
+  },
+  {
+   "row": "Q17",
+   "doc": "serving-cold-start",
+   "value": 0.215
+  },
+  {
+   "row": "Q17",
+   "doc": "serving-batching",
+   "value": 0.113
+  },
+  {
+   "row": "Q17",
+   "doc": "serving-warm-pool",
+   "value": 0.114
+  },
+  {
+   "row": "Q17",
+   "doc": "serving-export",
+   "value": 0.105
+  },
+  {
+   "row": "Q17",
+   "doc": "serving-streaming",
+   "value": 0.223
+  },
+  {
+   "row": "Q17",
+   "doc": "serving-versions",
+   "value": 0.1
+  },
+  {
+   "row": "Q17",
+   "doc": "serving-tokenizer",
+   "value": 0.188
+  },
+  {
+   "row": "Q17",
+   "doc": "gpu-oom-inference",
+   "value": 0.237
+  },
+  {
+   "row": "Q17",
+   "doc": "gpu-quantization",
+   "value": 0.019
+  },
+  {
+   "row": "Q17",
+   "doc": "gpu-kv-cache",
+   "value": 0.145
+  },
+  {
+   "row": "Q17",
+   "doc": "gpu-checkpointing",
+   "value": 0.086
+  },
+  {
+   "row": "Q17",
+   "doc": "gpu-measuring",
+   "value": 0.009
+  },
+  {
+   "row": "Q17",
+   "doc": "gpu-mixed-precision",
+   "value": -0.048
+  },
+  {
+   "row": "Q17",
+   "doc": "gpu-fragmentation",
+   "value": 0.149
+  },
+  {
+   "row": "Q17",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.041
+  },
+  {
+   "row": "Q17",
+   "doc": "chunking-overlap",
+   "value": 0.019
+  },
+  {
+   "row": "Q17",
+   "doc": "chunking-truncation",
+   "value": 0.184
+  },
+  {
+   "row": "Q17",
+   "doc": "chunking-metadata",
+   "value": 0.116
+  },
+  {
+   "row": "Q17",
+   "doc": "chunking-tables",
+   "value": -0.009
+  },
+  {
+   "row": "Q17",
+   "doc": "chunking-dedup",
+   "value": 0.126
+  },
+  {
+   "row": "Q17",
+   "doc": "chunking-parent",
+   "value": 0.042
+  },
+  {
+   "row": "Q17",
+   "doc": "indexing-column-order",
+   "value": -0.027
+  },
+  {
+   "row": "Q17",
+   "doc": "indexing-unused",
+   "value": 0.018
+  },
+  {
+   "row": "Q17",
+   "doc": "indexing-write-cost",
+   "value": 0.06
+  },
+  {
+   "row": "Q17",
+   "doc": "indexing-partial",
+   "value": 0.087
+  },
+  {
+   "row": "Q17",
+   "doc": "indexing-explain",
+   "value": 0.124
+  },
+  {
+   "row": "Q17",
+   "doc": "indexing-bloat",
+   "value": 0.198
+  },
+  {
+   "row": "Q17",
+   "doc": "indexing-covering",
+   "value": 0.006
+  },
+  {
+   "row": "Q17",
+   "doc": "a11y-focus",
+   "value": -0.022
+  },
+  {
+   "row": "Q17",
+   "doc": "a11y-contrast",
+   "value": -0.052
+  },
+  {
+   "row": "Q17",
+   "doc": "a11y-labels",
+   "value": 0
+  },
+  {
+   "row": "Q17",
+   "doc": "a11y-modal",
+   "value": 0.01
+  },
+  {
+   "row": "Q17",
+   "doc": "a11y-alt-text",
+   "value": -0.01
+  },
+  {
+   "row": "Q17",
+   "doc": "a11y-motion",
+   "value": 0.045
+  },
+  {
+   "row": "Q17",
+   "doc": "a11y-structure",
+   "value": -0.028
+  },
+  {
+   "row": "Q17",
+   "doc": "ci-flaky",
+   "value": 0.111
+  },
+  {
+   "row": "Q17",
+   "doc": "ci-cache",
+   "value": 0.208
+  },
+  {
+   "row": "Q17",
+   "doc": "ci-env",
+   "value": 0.388
+  },
+  {
+   "row": "Q17",
+   "doc": "ci-lockfile",
+   "value": 0.145
+  },
+  {
+   "row": "Q17",
+   "doc": "ci-disk",
+   "value": 0.278
+  },
+  {
+   "row": "Q17",
+   "doc": "ci-timeouts",
+   "value": 0.265
+  },
+  {
+   "row": "Q17",
+   "doc": "ci-matrix",
+   "value": 0.076
+  },
+  {
+   "row": "Q17",
+   "doc": "generic-troubleshooting",
+   "value": 0.141
+  },
+  {
+   "row": "Q17",
+   "doc": "generic-performance",
+   "value": 0.029
+  },
+  {
+   "row": "Q17",
+   "doc": "generic-overview",
+   "value": 0.044
+  },
+  {
+   "row": "Q17",
+   "doc": "generic-faq",
+   "value": 0.003
+  },
+  {
+   "row": "Q17",
+   "doc": "generic-glossary",
+   "value": 0.055
+  },
+  {
+   "row": "Q17",
+   "doc": "generic-onboarding",
+   "value": 0.136
+  },
+  {
+   "row": "Q17",
+   "doc": "generic-release-notes",
+   "value": 0.058
+  },
+  {
+   "row": "Q17",
+   "doc": "generic-escalation",
+   "value": 0.278
+  },
+  {
+   "row": "Q18",
+   "doc": "serving-cold-start",
+   "value": -0.068
+  },
+  {
+   "row": "Q18",
+   "doc": "serving-batching",
+   "value": -0.065
+  },
+  {
+   "row": "Q18",
+   "doc": "serving-warm-pool",
+   "value": -0.108
+  },
+  {
+   "row": "Q18",
+   "doc": "serving-export",
+   "value": -0.05
+  },
+  {
+   "row": "Q18",
+   "doc": "serving-streaming",
+   "value": 0.014
+  },
+  {
+   "row": "Q18",
+   "doc": "serving-versions",
+   "value": 0.034
+  },
+  {
+   "row": "Q18",
+   "doc": "serving-tokenizer",
+   "value": -0.084
+  },
+  {
+   "row": "Q18",
+   "doc": "gpu-oom-inference",
+   "value": -0.067
+  },
+  {
+   "row": "Q18",
+   "doc": "gpu-quantization",
+   "value": -0.043
+  },
+  {
+   "row": "Q18",
+   "doc": "gpu-kv-cache",
+   "value": -0.036
+  },
+  {
+   "row": "Q18",
+   "doc": "gpu-checkpointing",
+   "value": -0.069
+  },
+  {
+   "row": "Q18",
+   "doc": "gpu-measuring",
+   "value": -0.073
+  },
+  {
+   "row": "Q18",
+   "doc": "gpu-mixed-precision",
+   "value": -0.021
+  },
+  {
+   "row": "Q18",
+   "doc": "gpu-fragmentation",
+   "value": -0.067
+  },
+  {
+   "row": "Q18",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.153
+  },
+  {
+   "row": "Q18",
+   "doc": "chunking-overlap",
+   "value": 0.153
+  },
+  {
+   "row": "Q18",
+   "doc": "chunking-truncation",
+   "value": 0.043
+  },
+  {
+   "row": "Q18",
+   "doc": "chunking-metadata",
+   "value": 0.068
+  },
+  {
+   "row": "Q18",
+   "doc": "chunking-tables",
+   "value": 0.021
+  },
+  {
+   "row": "Q18",
+   "doc": "chunking-dedup",
+   "value": 0.139
+  },
+  {
+   "row": "Q18",
+   "doc": "chunking-parent",
+   "value": 0.124
+  },
+  {
+   "row": "Q18",
+   "doc": "indexing-column-order",
+   "value": 0.08
+  },
+  {
+   "row": "Q18",
+   "doc": "indexing-unused",
+   "value": 0.053
+  },
+  {
+   "row": "Q18",
+   "doc": "indexing-write-cost",
+   "value": 0.081
+  },
+  {
+   "row": "Q18",
+   "doc": "indexing-partial",
+   "value": -0.024
+  },
+  {
+   "row": "Q18",
+   "doc": "indexing-explain",
+   "value": 0.082
+  },
+  {
+   "row": "Q18",
+   "doc": "indexing-bloat",
+   "value": -0.107
+  },
+  {
+   "row": "Q18",
+   "doc": "indexing-covering",
+   "value": 0.023
+  },
+  {
+   "row": "Q18",
+   "doc": "a11y-focus",
+   "value": 0.033
+  },
+  {
+   "row": "Q18",
+   "doc": "a11y-contrast",
+   "value": 0.276
+  },
+  {
+   "row": "Q18",
+   "doc": "a11y-labels",
+   "value": 0.165
+  },
+  {
+   "row": "Q18",
+   "doc": "a11y-modal",
+   "value": 0.002
+  },
+  {
+   "row": "Q18",
+   "doc": "a11y-alt-text",
+   "value": 0.68
+  },
+  {
+   "row": "Q18",
+   "doc": "a11y-motion",
+   "value": 0.115
+  },
+  {
+   "row": "Q18",
+   "doc": "a11y-structure",
+   "value": 0.087
+  },
+  {
+   "row": "Q18",
+   "doc": "ci-flaky",
+   "value": -0.027
+  },
+  {
+   "row": "Q18",
+   "doc": "ci-cache",
+   "value": -0.055
+  },
+  {
+   "row": "Q18",
+   "doc": "ci-env",
+   "value": -0.066
+  },
+  {
+   "row": "Q18",
+   "doc": "ci-lockfile",
+   "value": -0.087
+  },
+  {
+   "row": "Q18",
+   "doc": "ci-disk",
+   "value": -0.07
+  },
+  {
+   "row": "Q18",
+   "doc": "ci-timeouts",
+   "value": -0.029
+  },
+  {
+   "row": "Q18",
+   "doc": "ci-matrix",
+   "value": -0.016
+  },
+  {
+   "row": "Q18",
+   "doc": "generic-troubleshooting",
+   "value": -0.088
+  },
+  {
+   "row": "Q18",
+   "doc": "generic-performance",
+   "value": 0.02
+  },
+  {
+   "row": "Q18",
+   "doc": "generic-overview",
+   "value": 0.157
+  },
+  {
+   "row": "Q18",
+   "doc": "generic-faq",
+   "value": 0.07
+  },
+  {
+   "row": "Q18",
+   "doc": "generic-glossary",
+   "value": 0.144
+  },
+  {
+   "row": "Q18",
+   "doc": "generic-onboarding",
+   "value": -0.046
+  },
+  {
+   "row": "Q18",
+   "doc": "generic-release-notes",
+   "value": 0.148
+  },
+  {
+   "row": "Q18",
+   "doc": "generic-escalation",
+   "value": 0.097
+  },
+  {
+   "row": "Q19",
+   "doc": "serving-cold-start",
+   "value": 0.209
+  },
+  {
+   "row": "Q19",
+   "doc": "serving-batching",
+   "value": -0.033
+  },
+  {
+   "row": "Q19",
+   "doc": "serving-warm-pool",
+   "value": 0.165
+  },
+  {
+   "row": "Q19",
+   "doc": "serving-export",
+   "value": 0.039
+  },
+  {
+   "row": "Q19",
+   "doc": "serving-streaming",
+   "value": -0.065
+  },
+  {
+   "row": "Q19",
+   "doc": "serving-versions",
+   "value": 0.134
+  },
+  {
+   "row": "Q19",
+   "doc": "serving-tokenizer",
+   "value": 0.146
+  },
+  {
+   "row": "Q19",
+   "doc": "gpu-oom-inference",
+   "value": 0.192
+  },
+  {
+   "row": "Q19",
+   "doc": "gpu-quantization",
+   "value": 0.131
+  },
+  {
+   "row": "Q19",
+   "doc": "gpu-kv-cache",
+   "value": 0.124
+  },
+  {
+   "row": "Q19",
+   "doc": "gpu-checkpointing",
+   "value": 0.065
+  },
+  {
+   "row": "Q19",
+   "doc": "gpu-measuring",
+   "value": -0.012
+  },
+  {
+   "row": "Q19",
+   "doc": "gpu-mixed-precision",
+   "value": 0.074
+  },
+  {
+   "row": "Q19",
+   "doc": "gpu-fragmentation",
+   "value": 0.197
+  },
+  {
+   "row": "Q19",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.124
+  },
+  {
+   "row": "Q19",
+   "doc": "chunking-overlap",
+   "value": 0.025
+  },
+  {
+   "row": "Q19",
+   "doc": "chunking-truncation",
+   "value": 0.093
+  },
+  {
+   "row": "Q19",
+   "doc": "chunking-metadata",
+   "value": 0.056
+  },
+  {
+   "row": "Q19",
+   "doc": "chunking-tables",
+   "value": 0.136
+  },
+  {
+   "row": "Q19",
+   "doc": "chunking-dedup",
+   "value": 0.089
+  },
+  {
+   "row": "Q19",
+   "doc": "chunking-parent",
+   "value": 0.174
+  },
+  {
+   "row": "Q19",
+   "doc": "indexing-column-order",
+   "value": -0.006
+  },
+  {
+   "row": "Q19",
+   "doc": "indexing-unused",
+   "value": -0.063
+  },
+  {
+   "row": "Q19",
+   "doc": "indexing-write-cost",
+   "value": 0.072
+  },
+  {
+   "row": "Q19",
+   "doc": "indexing-partial",
+   "value": -0.002
+  },
+  {
+   "row": "Q19",
+   "doc": "indexing-explain",
+   "value": 0.087
+  },
+  {
+   "row": "Q19",
+   "doc": "indexing-bloat",
+   "value": 0.116
+  },
+  {
+   "row": "Q19",
+   "doc": "indexing-covering",
+   "value": 0.041
+  },
+  {
+   "row": "Q19",
+   "doc": "a11y-focus",
+   "value": 0.037
+  },
+  {
+   "row": "Q19",
+   "doc": "a11y-contrast",
+   "value": 0.154
+  },
+  {
+   "row": "Q19",
+   "doc": "a11y-labels",
+   "value": -0.021
+  },
+  {
+   "row": "Q19",
+   "doc": "a11y-modal",
+   "value": 0.008
+  },
+  {
+   "row": "Q19",
+   "doc": "a11y-alt-text",
+   "value": 0.003
+  },
+  {
+   "row": "Q19",
+   "doc": "a11y-motion",
+   "value": 0.092
+  },
+  {
+   "row": "Q19",
+   "doc": "a11y-structure",
+   "value": 0.072
+  },
+  {
+   "row": "Q19",
+   "doc": "ci-flaky",
+   "value": -0.016
+  },
+  {
+   "row": "Q19",
+   "doc": "ci-cache",
+   "value": -0.096
+  },
+  {
+   "row": "Q19",
+   "doc": "ci-env",
+   "value": -0.074
+  },
+  {
+   "row": "Q19",
+   "doc": "ci-lockfile",
+   "value": -0.077
+  },
+  {
+   "row": "Q19",
+   "doc": "ci-disk",
+   "value": 0.057
+  },
+  {
+   "row": "Q19",
+   "doc": "ci-timeouts",
+   "value": -0.012
+  },
+  {
+   "row": "Q19",
+   "doc": "ci-matrix",
+   "value": -0.069
+  },
+  {
+   "row": "Q19",
+   "doc": "generic-troubleshooting",
+   "value": 0.098
+  },
+  {
+   "row": "Q19",
+   "doc": "generic-performance",
+   "value": 0.107
+  },
+  {
+   "row": "Q19",
+   "doc": "generic-overview",
+   "value": -0.083
+  },
+  {
+   "row": "Q19",
+   "doc": "generic-faq",
+   "value": 0.102
+  },
+  {
+   "row": "Q19",
+   "doc": "generic-glossary",
+   "value": -0.048
+  },
+  {
+   "row": "Q19",
+   "doc": "generic-onboarding",
+   "value": 0.032
+  },
+  {
+   "row": "Q19",
+   "doc": "generic-release-notes",
+   "value": 0.082
+  },
+  {
+   "row": "Q19",
+   "doc": "generic-escalation",
+   "value": 0.096
+  },
+  {
+   "row": "Q20",
+   "doc": "serving-cold-start",
+   "value": 0.165
+  },
+  {
+   "row": "Q20",
+   "doc": "serving-batching",
+   "value": 0.139
+  },
+  {
+   "row": "Q20",
+   "doc": "serving-warm-pool",
+   "value": 0.053
+  },
+  {
+   "row": "Q20",
+   "doc": "serving-export",
+   "value": 0.029
+  },
+  {
+   "row": "Q20",
+   "doc": "serving-streaming",
+   "value": 0.039
+  },
+  {
+   "row": "Q20",
+   "doc": "serving-versions",
+   "value": -0.057
+  },
+  {
+   "row": "Q20",
+   "doc": "serving-tokenizer",
+   "value": 0.034
+  },
+  {
+   "row": "Q20",
+   "doc": "gpu-oom-inference",
+   "value": 0.14
+  },
+  {
+   "row": "Q20",
+   "doc": "gpu-quantization",
+   "value": 0.092
+  },
+  {
+   "row": "Q20",
+   "doc": "gpu-kv-cache",
+   "value": 0.154
+  },
+  {
+   "row": "Q20",
+   "doc": "gpu-checkpointing",
+   "value": 0.01
+  },
+  {
+   "row": "Q20",
+   "doc": "gpu-measuring",
+   "value": -0.021
+  },
+  {
+   "row": "Q20",
+   "doc": "gpu-mixed-precision",
+   "value": 0.03
+  },
+  {
+   "row": "Q20",
+   "doc": "gpu-fragmentation",
+   "value": 0.027
+  },
+  {
+   "row": "Q20",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.066
+  },
+  {
+   "row": "Q20",
+   "doc": "chunking-overlap",
+   "value": 0.112
+  },
+  {
+   "row": "Q20",
+   "doc": "chunking-truncation",
+   "value": 0.17
+  },
+  {
+   "row": "Q20",
+   "doc": "chunking-metadata",
+   "value": 0.033
+  },
+  {
+   "row": "Q20",
+   "doc": "chunking-tables",
+   "value": 0.051
+  },
+  {
+   "row": "Q20",
+   "doc": "chunking-dedup",
+   "value": 0.236
+  },
+  {
+   "row": "Q20",
+   "doc": "chunking-parent",
+   "value": 0.173
+  },
+  {
+   "row": "Q20",
+   "doc": "indexing-column-order",
+   "value": 0.236
+  },
+  {
+   "row": "Q20",
+   "doc": "indexing-unused",
+   "value": 0.179
+  },
+  {
+   "row": "Q20",
+   "doc": "indexing-write-cost",
+   "value": 0.179
+  },
+  {
+   "row": "Q20",
+   "doc": "indexing-partial",
+   "value": 0.268
+  },
+  {
+   "row": "Q20",
+   "doc": "indexing-explain",
+   "value": 0.213
+  },
+  {
+   "row": "Q20",
+   "doc": "indexing-bloat",
+   "value": 0.204
+  },
+  {
+   "row": "Q20",
+   "doc": "indexing-covering",
+   "value": 0.272
+  },
+  {
+   "row": "Q20",
+   "doc": "a11y-focus",
+   "value": 0.039
+  },
+  {
+   "row": "Q20",
+   "doc": "a11y-contrast",
+   "value": -0.014
+  },
+  {
+   "row": "Q20",
+   "doc": "a11y-labels",
+   "value": -0.074
+  },
+  {
+   "row": "Q20",
+   "doc": "a11y-modal",
+   "value": 0.01
+  },
+  {
+   "row": "Q20",
+   "doc": "a11y-alt-text",
+   "value": -0.04
+  },
+  {
+   "row": "Q20",
+   "doc": "a11y-motion",
+   "value": 0.105
+  },
+  {
+   "row": "Q20",
+   "doc": "a11y-structure",
+   "value": 0.096
+  },
+  {
+   "row": "Q20",
+   "doc": "ci-flaky",
+   "value": 0.045
+  },
+  {
+   "row": "Q20",
+   "doc": "ci-cache",
+   "value": 0.019
+  },
+  {
+   "row": "Q20",
+   "doc": "ci-env",
+   "value": 0.064
+  },
+  {
+   "row": "Q20",
+   "doc": "ci-lockfile",
+   "value": -0.002
+  },
+  {
+   "row": "Q20",
+   "doc": "ci-disk",
+   "value": 0.072
+  },
+  {
+   "row": "Q20",
+   "doc": "ci-timeouts",
+   "value": 0.035
+  },
+  {
+   "row": "Q20",
+   "doc": "ci-matrix",
+   "value": 0.044
+  },
+  {
+   "row": "Q20",
+   "doc": "generic-troubleshooting",
+   "value": 0.041
+  },
+  {
+   "row": "Q20",
+   "doc": "generic-performance",
+   "value": 0.208
+  },
+  {
+   "row": "Q20",
+   "doc": "generic-overview",
+   "value": -0.092
+  },
+  {
+   "row": "Q20",
+   "doc": "generic-faq",
+   "value": 0.151
+  },
+  {
+   "row": "Q20",
+   "doc": "generic-glossary",
+   "value": -0.038
+  },
+  {
+   "row": "Q20",
+   "doc": "generic-onboarding",
+   "value": -0.024
+  },
+  {
+   "row": "Q20",
+   "doc": "generic-release-notes",
+   "value": -0.007
+  },
+  {
+   "row": "Q20",
+   "doc": "generic-escalation",
+   "value": 0.076
+  },
+  {
+   "row": "Q21",
+   "doc": "serving-cold-start",
+   "value": -0.005
+  },
+  {
+   "row": "Q21",
+   "doc": "serving-batching",
+   "value": -0.022
+  },
+  {
+   "row": "Q21",
+   "doc": "serving-warm-pool",
+   "value": -0.055
+  },
+  {
+   "row": "Q21",
+   "doc": "serving-export",
+   "value": -0.023
+  },
+  {
+   "row": "Q21",
+   "doc": "serving-streaming",
+   "value": -0.099
+  },
+  {
+   "row": "Q21",
+   "doc": "serving-versions",
+   "value": -0.069
+  },
+  {
+   "row": "Q21",
+   "doc": "serving-tokenizer",
+   "value": 0.012
+  },
+  {
+   "row": "Q21",
+   "doc": "gpu-oom-inference",
+   "value": 0.028
+  },
+  {
+   "row": "Q21",
+   "doc": "gpu-quantization",
+   "value": 0.014
+  },
+  {
+   "row": "Q21",
+   "doc": "gpu-kv-cache",
+   "value": 0.026
+  },
+  {
+   "row": "Q21",
+   "doc": "gpu-checkpointing",
+   "value": -0.044
+  },
+  {
+   "row": "Q21",
+   "doc": "gpu-measuring",
+   "value": -0.095
+  },
+  {
+   "row": "Q21",
+   "doc": "gpu-mixed-precision",
+   "value": 0.031
+  },
+  {
+   "row": "Q21",
+   "doc": "gpu-fragmentation",
+   "value": 0.019
+  },
+  {
+   "row": "Q21",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": -0.002
+  },
+  {
+   "row": "Q21",
+   "doc": "chunking-overlap",
+   "value": -0.072
+  },
+  {
+   "row": "Q21",
+   "doc": "chunking-truncation",
+   "value": 0.081
+  },
+  {
+   "row": "Q21",
+   "doc": "chunking-metadata",
+   "value": -0.017
+  },
+  {
+   "row": "Q21",
+   "doc": "chunking-tables",
+   "value": 0.065
+  },
+  {
+   "row": "Q21",
+   "doc": "chunking-dedup",
+   "value": -0.023
+  },
+  {
+   "row": "Q21",
+   "doc": "chunking-parent",
+   "value": -0.051
+  },
+  {
+   "row": "Q21",
+   "doc": "indexing-column-order",
+   "value": 0.027
+  },
+  {
+   "row": "Q21",
+   "doc": "indexing-unused",
+   "value": -0.008
+  },
+  {
+   "row": "Q21",
+   "doc": "indexing-write-cost",
+   "value": 0.009
+  },
+  {
+   "row": "Q21",
+   "doc": "indexing-partial",
+   "value": -0.077
+  },
+  {
+   "row": "Q21",
+   "doc": "indexing-explain",
+   "value": -0.019
+  },
+  {
+   "row": "Q21",
+   "doc": "indexing-bloat",
+   "value": 0.053
+  },
+  {
+   "row": "Q21",
+   "doc": "indexing-covering",
+   "value": -0.037
+  },
+  {
+   "row": "Q21",
+   "doc": "a11y-focus",
+   "value": 0.284
+  },
+  {
+   "row": "Q21",
+   "doc": "a11y-contrast",
+   "value": 0.208
+  },
+  {
+   "row": "Q21",
+   "doc": "a11y-labels",
+   "value": 0.081
+  },
+  {
+   "row": "Q21",
+   "doc": "a11y-modal",
+   "value": 0.307
+  },
+  {
+   "row": "Q21",
+   "doc": "a11y-alt-text",
+   "value": -0.041
+  },
+  {
+   "row": "Q21",
+   "doc": "a11y-motion",
+   "value": 0.128
+  },
+  {
+   "row": "Q21",
+   "doc": "a11y-structure",
+   "value": 0.131
+  },
+  {
+   "row": "Q21",
+   "doc": "ci-flaky",
+   "value": -0.064
+  },
+  {
+   "row": "Q21",
+   "doc": "ci-cache",
+   "value": 0.106
+  },
+  {
+   "row": "Q21",
+   "doc": "ci-env",
+   "value": -0.068
+  },
+  {
+   "row": "Q21",
+   "doc": "ci-lockfile",
+   "value": 0.016
+  },
+  {
+   "row": "Q21",
+   "doc": "ci-disk",
+   "value": -0.013
+  },
+  {
+   "row": "Q21",
+   "doc": "ci-timeouts",
+   "value": 0.015
+  },
+  {
+   "row": "Q21",
+   "doc": "ci-matrix",
+   "value": 0.034
+  },
+  {
+   "row": "Q21",
+   "doc": "generic-troubleshooting",
+   "value": 0.083
+  },
+  {
+   "row": "Q21",
+   "doc": "generic-performance",
+   "value": -0.048
+  },
+  {
+   "row": "Q21",
+   "doc": "generic-overview",
+   "value": 0.056
+  },
+  {
+   "row": "Q21",
+   "doc": "generic-faq",
+   "value": 0.066
+  },
+  {
+   "row": "Q21",
+   "doc": "generic-glossary",
+   "value": -0.036
+  },
+  {
+   "row": "Q21",
+   "doc": "generic-onboarding",
+   "value": 0.065
+  },
+  {
+   "row": "Q21",
+   "doc": "generic-release-notes",
+   "value": 0.031
+  },
+  {
+   "row": "Q21",
+   "doc": "generic-escalation",
+   "value": 0.054
+  },
+  {
+   "row": "Q22",
+   "doc": "serving-cold-start",
+   "value": 0.075
+  },
+  {
+   "row": "Q22",
+   "doc": "serving-batching",
+   "value": 0.135
+  },
+  {
+   "row": "Q22",
+   "doc": "serving-warm-pool",
+   "value": 0.247
+  },
+  {
+   "row": "Q22",
+   "doc": "serving-export",
+   "value": 0.074
+  },
+  {
+   "row": "Q22",
+   "doc": "serving-streaming",
+   "value": 0.172
+  },
+  {
+   "row": "Q22",
+   "doc": "serving-versions",
+   "value": 0.018
+  },
+  {
+   "row": "Q22",
+   "doc": "serving-tokenizer",
+   "value": 0.189
+  },
+  {
+   "row": "Q22",
+   "doc": "gpu-oom-inference",
+   "value": 0.474
+  },
+  {
+   "row": "Q22",
+   "doc": "gpu-quantization",
+   "value": 0.2
+  },
+  {
+   "row": "Q22",
+   "doc": "gpu-kv-cache",
+   "value": 0.335
+  },
+  {
+   "row": "Q22",
+   "doc": "gpu-checkpointing",
+   "value": 0.343
+  },
+  {
+   "row": "Q22",
+   "doc": "gpu-measuring",
+   "value": 0.252
+  },
+  {
+   "row": "Q22",
+   "doc": "gpu-mixed-precision",
+   "value": 0.089
+  },
+  {
+   "row": "Q22",
+   "doc": "gpu-fragmentation",
+   "value": 0.25
+  },
+  {
+   "row": "Q22",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.135
+  },
+  {
+   "row": "Q22",
+   "doc": "chunking-overlap",
+   "value": 0.064
+  },
+  {
+   "row": "Q22",
+   "doc": "chunking-truncation",
+   "value": 0.223
+  },
+  {
+   "row": "Q22",
+   "doc": "chunking-metadata",
+   "value": 0.174
+  },
+  {
+   "row": "Q22",
+   "doc": "chunking-tables",
+   "value": 0.102
+  },
+  {
+   "row": "Q22",
+   "doc": "chunking-dedup",
+   "value": 0.094
+  },
+  {
+   "row": "Q22",
+   "doc": "chunking-parent",
+   "value": 0.236
+  },
+  {
+   "row": "Q22",
+   "doc": "indexing-column-order",
+   "value": -0.123
+  },
+  {
+   "row": "Q22",
+   "doc": "indexing-unused",
+   "value": 0.071
+  },
+  {
+   "row": "Q22",
+   "doc": "indexing-write-cost",
+   "value": 0.116
+  },
+  {
+   "row": "Q22",
+   "doc": "indexing-partial",
+   "value": 0.047
+  },
+  {
+   "row": "Q22",
+   "doc": "indexing-explain",
+   "value": 0.209
+  },
+  {
+   "row": "Q22",
+   "doc": "indexing-bloat",
+   "value": 0.261
+  },
+  {
+   "row": "Q22",
+   "doc": "indexing-covering",
+   "value": 0.118
+  },
+  {
+   "row": "Q22",
+   "doc": "a11y-focus",
+   "value": -0.005
+  },
+  {
+   "row": "Q22",
+   "doc": "a11y-contrast",
+   "value": 0.004
+  },
+  {
+   "row": "Q22",
+   "doc": "a11y-labels",
+   "value": 0.111
+  },
+  {
+   "row": "Q22",
+   "doc": "a11y-modal",
+   "value": 0.028
+  },
+  {
+   "row": "Q22",
+   "doc": "a11y-alt-text",
+   "value": 0.001
+  },
+  {
+   "row": "Q22",
+   "doc": "a11y-motion",
+   "value": 0.063
+  },
+  {
+   "row": "Q22",
+   "doc": "a11y-structure",
+   "value": 0.119
+  },
+  {
+   "row": "Q22",
+   "doc": "ci-flaky",
+   "value": 0.051
+  },
+  {
+   "row": "Q22",
+   "doc": "ci-cache",
+   "value": 0.122
+  },
+  {
+   "row": "Q22",
+   "doc": "ci-env",
+   "value": 0.06
+  },
+  {
+   "row": "Q22",
+   "doc": "ci-lockfile",
+   "value": 0.028
+  },
+  {
+   "row": "Q22",
+   "doc": "ci-disk",
+   "value": 0.24
+  },
+  {
+   "row": "Q22",
+   "doc": "ci-timeouts",
+   "value": 0.147
+  },
+  {
+   "row": "Q22",
+   "doc": "ci-matrix",
+   "value": 0.124
+  },
+  {
+   "row": "Q22",
+   "doc": "generic-troubleshooting",
+   "value": 0.22
+  },
+  {
+   "row": "Q22",
+   "doc": "generic-performance",
+   "value": 0.103
+  },
+  {
+   "row": "Q22",
+   "doc": "generic-overview",
+   "value": 0.03
+  },
+  {
+   "row": "Q22",
+   "doc": "generic-faq",
+   "value": 0.261
+  },
+  {
+   "row": "Q22",
+   "doc": "generic-glossary",
+   "value": 0.094
+  },
+  {
+   "row": "Q22",
+   "doc": "generic-onboarding",
+   "value": 0.044
+  },
+  {
+   "row": "Q22",
+   "doc": "generic-release-notes",
+   "value": 0.171
+  },
+  {
+   "row": "Q22",
+   "doc": "generic-escalation",
+   "value": 0.167
+  },
+  {
+   "row": "Q23",
+   "doc": "serving-cold-start",
+   "value": 0.345
+  },
+  {
+   "row": "Q23",
+   "doc": "serving-batching",
+   "value": 0.162
+  },
+  {
+   "row": "Q23",
+   "doc": "serving-warm-pool",
+   "value": 0.119
+  },
+  {
+   "row": "Q23",
+   "doc": "serving-export",
+   "value": 0.087
+  },
+  {
+   "row": "Q23",
+   "doc": "serving-streaming",
+   "value": 0.377
+  },
+  {
+   "row": "Q23",
+   "doc": "serving-versions",
+   "value": 0.052
+  },
+  {
+   "row": "Q23",
+   "doc": "serving-tokenizer",
+   "value": 0.125
+  },
+  {
+   "row": "Q23",
+   "doc": "gpu-oom-inference",
+   "value": 0.3
+  },
+  {
+   "row": "Q23",
+   "doc": "gpu-quantization",
+   "value": 0.004
+  },
+  {
+   "row": "Q23",
+   "doc": "gpu-kv-cache",
+   "value": 0.176
+  },
+  {
+   "row": "Q23",
+   "doc": "gpu-checkpointing",
+   "value": 0.091
+  },
+  {
+   "row": "Q23",
+   "doc": "gpu-measuring",
+   "value": -0.098
+  },
+  {
+   "row": "Q23",
+   "doc": "gpu-mixed-precision",
+   "value": -0.013
+  },
+  {
+   "row": "Q23",
+   "doc": "gpu-fragmentation",
+   "value": 0.106
+  },
+  {
+   "row": "Q23",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.149
+  },
+  {
+   "row": "Q23",
+   "doc": "chunking-overlap",
+   "value": 0.118
+  },
+  {
+   "row": "Q23",
+   "doc": "chunking-truncation",
+   "value": 0.288
+  },
+  {
+   "row": "Q23",
+   "doc": "chunking-metadata",
+   "value": 0.168
+  },
+  {
+   "row": "Q23",
+   "doc": "chunking-tables",
+   "value": 0.101
+  },
+  {
+   "row": "Q23",
+   "doc": "chunking-dedup",
+   "value": 0.186
+  },
+  {
+   "row": "Q23",
+   "doc": "chunking-parent",
+   "value": 0.196
+  },
+  {
+   "row": "Q23",
+   "doc": "indexing-column-order",
+   "value": 0.084
+  },
+  {
+   "row": "Q23",
+   "doc": "indexing-unused",
+   "value": 0.049
+  },
+  {
+   "row": "Q23",
+   "doc": "indexing-write-cost",
+   "value": 0.034
+  },
+  {
+   "row": "Q23",
+   "doc": "indexing-partial",
+   "value": 0.063
+  },
+  {
+   "row": "Q23",
+   "doc": "indexing-explain",
+   "value": 0.126
+  },
+  {
+   "row": "Q23",
+   "doc": "indexing-bloat",
+   "value": 0.155
+  },
+  {
+   "row": "Q23",
+   "doc": "indexing-covering",
+   "value": 0.122
+  },
+  {
+   "row": "Q23",
+   "doc": "a11y-focus",
+   "value": -0.007
+  },
+  {
+   "row": "Q23",
+   "doc": "a11y-contrast",
+   "value": 0.086
+  },
+  {
+   "row": "Q23",
+   "doc": "a11y-labels",
+   "value": -0.04
+  },
+  {
+   "row": "Q23",
+   "doc": "a11y-modal",
+   "value": 0.13
+  },
+  {
+   "row": "Q23",
+   "doc": "a11y-alt-text",
+   "value": -0.042
+  },
+  {
+   "row": "Q23",
+   "doc": "a11y-motion",
+   "value": 0.165
+  },
+  {
+   "row": "Q23",
+   "doc": "a11y-structure",
+   "value": 0.159
+  },
+  {
+   "row": "Q23",
+   "doc": "ci-flaky",
+   "value": 0.166
+  },
+  {
+   "row": "Q23",
+   "doc": "ci-cache",
+   "value": 0.055
+  },
+  {
+   "row": "Q23",
+   "doc": "ci-env",
+   "value": 0.126
+  },
+  {
+   "row": "Q23",
+   "doc": "ci-lockfile",
+   "value": 0.036
+  },
+  {
+   "row": "Q23",
+   "doc": "ci-disk",
+   "value": 0.123
+  },
+  {
+   "row": "Q23",
+   "doc": "ci-timeouts",
+   "value": 0.164
+  },
+  {
+   "row": "Q23",
+   "doc": "ci-matrix",
+   "value": 0.165
+  },
+  {
+   "row": "Q23",
+   "doc": "generic-troubleshooting",
+   "value": 0.174
+  },
+  {
+   "row": "Q23",
+   "doc": "generic-performance",
+   "value": 0.184
+  },
+  {
+   "row": "Q23",
+   "doc": "generic-overview",
+   "value": -0.004
+  },
+  {
+   "row": "Q23",
+   "doc": "generic-faq",
+   "value": 0.295
+  },
+  {
+   "row": "Q23",
+   "doc": "generic-glossary",
+   "value": -0.068
+  },
+  {
+   "row": "Q23",
+   "doc": "generic-onboarding",
+   "value": 0.013
+  },
+  {
+   "row": "Q23",
+   "doc": "generic-release-notes",
+   "value": -0.045
+  },
+  {
+   "row": "Q23",
+   "doc": "generic-escalation",
+   "value": 0.163
+  },
+  {
+   "row": "Q24",
+   "doc": "serving-cold-start",
+   "value": 0.12
+  },
+  {
+   "row": "Q24",
+   "doc": "serving-batching",
+   "value": 0.111
+  },
+  {
+   "row": "Q24",
+   "doc": "serving-warm-pool",
+   "value": 0.027
+  },
+  {
+   "row": "Q24",
+   "doc": "serving-export",
+   "value": 0.013
+  },
+  {
+   "row": "Q24",
+   "doc": "serving-streaming",
+   "value": 0.139
+  },
+  {
+   "row": "Q24",
+   "doc": "serving-versions",
+   "value": 0.049
+  },
+  {
+   "row": "Q24",
+   "doc": "serving-tokenizer",
+   "value": 0.184
+  },
+  {
+   "row": "Q24",
+   "doc": "gpu-oom-inference",
+   "value": 0.191
+  },
+  {
+   "row": "Q24",
+   "doc": "gpu-quantization",
+   "value": 0.013
+  },
+  {
+   "row": "Q24",
+   "doc": "gpu-kv-cache",
+   "value": 0.088
+  },
+  {
+   "row": "Q24",
+   "doc": "gpu-checkpointing",
+   "value": 0.155
+  },
+  {
+   "row": "Q24",
+   "doc": "gpu-measuring",
+   "value": 0.051
+  },
+  {
+   "row": "Q24",
+   "doc": "gpu-mixed-precision",
+   "value": -0.011
+  },
+  {
+   "row": "Q24",
+   "doc": "gpu-fragmentation",
+   "value": 0.067
+  },
+  {
+   "row": "Q24",
+   "doc": "chunking-fixed-vs-semantic",
+   "value": 0.166
+  },
+  {
+   "row": "Q24",
+   "doc": "chunking-overlap",
+   "value": 0.295
+  },
+  {
+   "row": "Q24",
+   "doc": "chunking-truncation",
+   "value": 0.159
+  },
+  {
+   "row": "Q24",
+   "doc": "chunking-metadata",
+   "value": 0.268
+  },
+  {
+   "row": "Q24",
+   "doc": "chunking-tables",
+   "value": 0.094
+  },
+  {
+   "row": "Q24",
+   "doc": "chunking-dedup",
+   "value": 0.379
+  },
+  {
+   "row": "Q24",
+   "doc": "chunking-parent",
+   "value": 0.247
+  },
+  {
+   "row": "Q24",
+   "doc": "indexing-column-order",
+   "value": 0.108
+  },
+  {
+   "row": "Q24",
+   "doc": "indexing-unused",
+   "value": 0.169
+  },
+  {
+   "row": "Q24",
+   "doc": "indexing-write-cost",
+   "value": 0.071
+  },
+  {
+   "row": "Q24",
+   "doc": "indexing-partial",
+   "value": 0.077
+  },
+  {
+   "row": "Q24",
+   "doc": "indexing-explain",
+   "value": 0.25
+  },
+  {
+   "row": "Q24",
+   "doc": "indexing-bloat",
+   "value": 0.129
+  },
+  {
+   "row": "Q24",
+   "doc": "indexing-covering",
+   "value": 0.111
+  },
+  {
+   "row": "Q24",
+   "doc": "a11y-focus",
+   "value": -0.019
+  },
+  {
+   "row": "Q24",
+   "doc": "a11y-contrast",
+   "value": 0.082
+  },
+  {
+   "row": "Q24",
+   "doc": "a11y-labels",
+   "value": 0.023
+  },
+  {
+   "row": "Q24",
+   "doc": "a11y-modal",
+   "value": 0.06
+  },
+  {
+   "row": "Q24",
+   "doc": "a11y-alt-text",
+   "value": 0.099
+  },
+  {
+   "row": "Q24",
+   "doc": "a11y-motion",
+   "value": 0.098
+  },
+  {
+   "row": "Q24",
+   "doc": "a11y-structure",
+   "value": 0.15
+  },
+  {
+   "row": "Q24",
+   "doc": "ci-flaky",
+   "value": 0.27
+  },
+  {
+   "row": "Q24",
+   "doc": "ci-cache",
+   "value": 0.066
+  },
+  {
+   "row": "Q24",
+   "doc": "ci-env",
+   "value": 0.179
+  },
+  {
+   "row": "Q24",
+   "doc": "ci-lockfile",
+   "value": -0.036
+  },
+  {
+   "row": "Q24",
+   "doc": "ci-disk",
+   "value": 0.125
+  },
+  {
+   "row": "Q24",
+   "doc": "ci-timeouts",
+   "value": 0.204
+  },
+  {
+   "row": "Q24",
+   "doc": "ci-matrix",
+   "value": 0.178
+  },
+  {
+   "row": "Q24",
+   "doc": "generic-troubleshooting",
+   "value": 0.03
+  },
+  {
+   "row": "Q24",
+   "doc": "generic-performance",
+   "value": 0.048
+  },
+  {
+   "row": "Q24",
+   "doc": "generic-overview",
+   "value": -0.003
+  },
+  {
+   "row": "Q24",
+   "doc": "generic-faq",
+   "value": 0.139
+  },
+  {
+   "row": "Q24",
+   "doc": "generic-glossary",
+   "value": -0.033
+  },
+  {
+   "row": "Q24",
+   "doc": "generic-onboarding",
+   "value": 0.031
+  },
+  {
+   "row": "Q24",
+   "doc": "generic-release-notes",
+   "value": -0.013
+  },
+  {
+   "row": "Q24",
+   "doc": "generic-escalation",
+   "value": 0.165
+  }
+ ]
+}

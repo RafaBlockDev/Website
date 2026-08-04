@@ -1,0 +1,74 @@
+---
+# TEMPLATE: copy this file, fill in real information, and set draft: false.
+# Full guidance: docs/notebook-style-guide.md
+# Narrative checklist (not mandatory visible headings): real motivation,
+# concrete question, what you expected, setup, main result, unexpected
+# observation, interpretation (kept separate from observation), intervention
+# or comparison, what did not improve, practical implications, specific
+# limitations, short conclusion, references/reproduction notes.
+# Include at least one failure, contradiction, or unresolved result.
+# Do not invent numbers: every figure/table value should come from a real
+# run you can point to. No em dashes or middle dots in prose.
+title: "Working title, stated as a finding or a question"
+date: 2026-01-01
+summary: >
+  One to three factual sentences: what you tested and what you found.
+  Not a teaser.
+tags: ["specific-tag", "specific-tag"]
+math: false
+draft: true
+---
+
+{/*
+  Import Notebook chart components from ../../components/plots/ if this
+  entry has quantitative figures. Observable Plot only; see the style
+  guide's visual rules before adding a chart.
+*/}
+
+Open with the real problem or decision, not a definition. What were you
+actually trying to find out, and why did it matter enough to check?
+
+## What I expected
+
+State the assumption you were testing, in your own words, before showing
+any result. If you were wrong, say so plainly when you get there.
+
+## Setup
+
+The minimum needed to make the result legible: what you measured, on what,
+and how. Link to the full experiment rather than inlining every detail.
+Only include a code snippet here if it explains a method or decision that
+isn't obvious from the prose.
+
+## What I found
+
+Exact numbers. Separate the observation ("X measured 0.72") from what you
+think it means; don't fuse the two into one sentence.
+
+If there's a figure here, it should answer one clear question. Quantitative
+charts use Observable Plot; exact values belong in an HTML table, not
+crammed into chart labels. Dense secondary evidence (full matrices, full
+per-item breakdowns) goes inside a `<details>` element, collapsed by
+default.
+
+## What didn't hold up
+
+Every entry needs at least one failure, contradiction, or result you
+couldn't resolve. This is usually the most useful section for a reader,
+so don't compress it into one sentence.
+
+## Implications
+
+What this changes about how you'd actually build something, stated
+narrowly for this setup, not "for AI" or "for search" in general.
+
+## Limitations
+
+Specific, not disclaimers. What would break this result: a different scale,
+a different model, a different corpus, a different assumption you didn't
+check.
+
+## Conclusion
+
+A few sentences. Don't re-summarize the whole entry. Say what you now
+believe, plainly, and what you're still unsure about.

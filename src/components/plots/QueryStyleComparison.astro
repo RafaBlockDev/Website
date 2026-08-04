@@ -1,0 +1,94 @@
+---
+import ObservablePlot from './ObservablePlot.astro';
+import queryStyle from '../../data/embedding-hubness/figures/query-style.json';
+
+const styleLabel: Record<string, string> = { specific: 'Full sentences', terse: 'Fragments' };
+const rows = queryStyle.styles.map((s: any) => ({ ...s, label: `${styleLabel[s.style] ?? s.style} (n=${s.n})` }));
+---
+
+<ObservablePlot
+  id="fig-query-style"
+  title="Figure 6 · Does CSLS help full sentences and fragments equally?"
+  description="nDCG@5 before and after CSLS for each query style, and each style's average rank-1 margin."
+  srDescription={`Comparison of full-sentence and fragment queries. ${rows
+    .map(
+      (r: any) =>
+        `${r.label}: nDCG at 5 goes from ${r.ndcgCosine.toFixed(3)} under cosine to ${r.ndcgCsls.toFixed(
+          3
+        )} under CSLS, with an average rank-1 margin of ${r.meanMargin.toFixed(3)}`
+    )
+    .join('. ')}.`}
+  caption="Muted dot: cosine. Accent dot: CSLS. Full sentences improve slightly under CSLS; fragments, which start with thinner margins, get slightly worse."
+  maxWidth="34rem"
+  minHeight="14rem"
+>
+</ObservablePlot>
+
+<script>
+  import * as Plot from '@observablehq/plot';
+  import queryStyle from '../../data/embedding-hubness/figures/query-style.json';
+  import { COLORS, baseStyle } from './plot-theme';
+
+  const styleLabel: Record<string, string> = { specific: 'Full sentences', terse: 'Fragments' };
+
+  const container = document.getElementById('fig-query-style');
+  if (container) {
+    const rows = queryStyle.styles.map((s: any) => ({ ...s, label: `${styleLabel[s.style] ?? s.style} (n=${s.n})` }));
+    const labels = rows.map((r: any) => r.label);
+
+    const ndcgPanel = (width: number) =>
+      Plot.plot({
+        width,
+        height: rows.length * 46 + 24,
+        marginLeft: 150,
+        marginRight: 34,
+        marginTop: 10,
+        marginBottom: 30,
+        style: baseStyle,
+        x: { domain: [0, 1], label: 'nDCG@5', labelAnchor: 'center', labelArrow: false, grid: true },
+        y: { domain: labels, label: null },
+        marks: [
+          Plot.ruleX([0]),
+          Plot.link(rows, { x1: 'ndcgCosine', y1: 'label', x2: 'ndcgCsls', y2: 'label', stroke: COLORS.inkFaint, strokeWidth: 2 }),
+          Plot.dot(rows, { x: 'ndcgCosine', y: 'label', fill: COLORS.inkMuted, r: 5 }),
+          Plot.dot(rows, { x: 'ndcgCsls', y: 'label', fill: COLORS.accent, r: 5 }),
+          Plot.text(rows, { x: 'ndcgCosine', y: 'label', text: (d: any) => d.ndcgCosine.toFixed(3), dy: 16, fill: COLORS.inkMuted, fontSize: 11 }),
+          Plot.text(rows, { x: 'ndcgCsls', y: 'label', text: (d: any) => d.ndcgCsls.toFixed(3), dy: -12, fill: COLORS.accent, fontWeight: 'bold', fontSize: 11 })
+        ]
+      });
+
+    const marginPanel = (width: number) =>
+      Plot.plot({
+        width,
+        height: rows.length * 46 + 24,
+        marginLeft: 150,
+        marginRight: 34,
+        marginTop: 10,
+        marginBottom: 30,
+        style: baseStyle,
+        x: { domain: [0, 0.25], label: 'mean rank-1 margin', labelAnchor: 'center', labelArrow: false, grid: true },
+        y: { domain: labels, label: null },
+        marks: [
+          Plot.ruleX([0]),
+          Plot.barX(rows, { x: 'meanMargin', y: 'label', fill: COLORS.accentMuted }),
+          Plot.text(rows, { x: 'meanMargin', y: 'label', text: (d: any) => d.meanMargin.toFixed(3), dx: 8, textAnchor: 'start', fill: COLORS.ink, fontSize: 11 })
+        ]
+      });
+
+    const paint = () => {
+      const width = Math.max(container.clientWidth, 220);
+      const wrap = document.createElement('div');
+      wrap.className = 'flex flex-col gap-3';
+      wrap.append(ndcgPanel(width));
+      wrap.append(marginPanel(width));
+      container.replaceChildren(wrap);
+    };
+
+    paint();
+    let frame: number | null = null;
+    new ResizeObserver(() => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(paint);
+    }).observe(container);
+  }
+</script>

@@ -1,0 +1,18 @@
+{
+ "styles": [
+  {
+   "style": "specific",
+   "n": 18,
+   "ndcgCosine": 0.761,
+   "ndcgCsls": 0.7684,
+   "meanMargin": 0.1833
+  },
+  {
+   "style": "terse",
+   "n": 6,
+   "ndcgCosine": 0.6417,
+   "ndcgCsls": 0.6283,
+   "meanMargin": 0.0476
+  }
+ ]
+}

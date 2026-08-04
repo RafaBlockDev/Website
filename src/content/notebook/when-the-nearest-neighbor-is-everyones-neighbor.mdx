@@ -1,0 +1,460 @@
+---
+title: "When the Nearest Neighbor Is Everyone's Neighbor"
+date: 2026-08-03
+summary: >
+  A 50-document retrieval experiment where cosine similarity's aggregate
+  metrics looked fine while a handful of documents kept surfacing for
+  unrelated queries. Measuring the neighbor graph directly, and correcting
+  it with CSLS, separates a geometric problem from a semantic one, and
+  shows why fixing the first barely touches the second.
+tags:
+  [
+    "embeddings",
+    "cosine-similarity",
+    "semantic-search",
+    "retrieval",
+    "hubness",
+    "csls",
+    "rag"
+  ]
+math: true
+ogImage: "/og/notebook-when-the-nearest-neighbor-is-everyones-neighbor.png"
+draft: false
+---
+
+import OccurrenceChart from '../../components/plots/OccurrenceChart.astro';
+import CrossTopicByK from '../../components/plots/CrossTopicByK.astro';
+import BeforeAfterCsls from '../../components/plots/BeforeAfterCsls.astro';
+import RetrievalMetrics from '../../components/plots/RetrievalMetrics.astro';
+import MarginAnalysis from '../../components/plots/MarginAnalysis.astro';
+import QueryStyleComparison from '../../components/plots/QueryStyleComparison.astro';
+import SimilarityMatrix from '../../components/plots/SimilarityMatrix.astro';
+import QueryExampleCard from '../../components/plots/QueryExampleCard.astro';
+
+> Every figure and number below is read from `hubness.json`, the single JSON
+> artifact written by `experiments/embedding-hubness/experiment.py`. The
+> corpus, the hand-written relevance labels, and the pinned dependency
+> versions live in that directory. Nothing here is estimated after the fact.
+
+## Why I tested cosine similarity before adding semantic search
+
+I've been planning to add a search box to this site: chunk the pages, embed
+the chunks, embed the query, return whichever chunks have the closest cosine
+similarity to it. That design is standard enough that it's easy to build
+without examining it. Before writing any of it, I wanted to check the one
+assumption the whole thing depends on.
+
+It isn't the assumption that cosine similarity *is* relevance. Nobody
+believes that. It's a narrower assumption, and it's the one that actually
+has to hold for a ranked list to be useful: that a **higher** cosine score
+means a **more relevant** result, consistently enough that sorting by it
+produces a sensible order. If that fails quietly, precision and recall can
+still look fine while the thing you show users is wrong more often than the
+metrics let on.
+
+Cosine similarity between vectors $x$ and $y$ is
+
+$$
+\cos(x, y) = \frac{x \cdot y}{\lVert x \rVert \, \lVert y \rVert}.
+$$
+
+Once every vector is $L_2$-normalized the denominator is 1, so it's just a
+dot product of unit vectors: direction only, magnitude discarded. That's
+usually a feature: a two-sentence chunk and a two-paragraph chunk become
+comparable. What it does *not* do is account for anything about the rest of
+the corpus. Two vectors get the same score regardless of how crowded the
+neighborhood around either of them is, and that turns out to matter more
+than I expected.
+
+## The retrieval setup
+
+The corpus is 50 short synthetic documents, written to imitate chunks from an
+internal engineering wiki: model serving, GPU memory, chunking strategy,
+database indexing, frontend accessibility, and CI failures, seven documents
+each, plus eight deliberately generic pages (an onboarding checklist, a FAQ,
+a troubleshooting guide, a glossary) of the kind that accumulates in any
+real wiki and says a little about everything.
+
+Each document is encoded as its title and body concatenated, with
+`sentence-transformers/all-MiniLM-L6-v2` (384 dimensions), then
+$L_2$-normalized. Twenty-four queries go through the same encoder: eighteen
+full sentences and six short fragments like *"out of memory"* or *"the query
+is slow."* Every query carries one or two hand-picked relevant document IDs,
+assigned by reading the corpus before a single embedding was computed:
+labels first, scores after, so the labels can't be quietly shaped by what the
+model happens to return.
+
+```python
+def l2_normalize(x):
+    norms = np.linalg.norm(x, axis=1, keepdims=True)
+    return x / np.maximum(norms, 1e-12)
+
+def cosine_matrix(a, b):
+    return l2_normalize(a) @ l2_normalize(b).T
+```
+
+Retrieval is evaluated at $k = 5$: precision@1, precision@5, recall@5, MRR,
+and nDCG@5.
+
+## Aggregate metrics looked reasonable
+
+The first pass gave no reason to stop. Cosine similarity puts the correct
+document at rank 1 for 18 of 24 queries: precision@1 of 0.750, MRR 0.818,
+nDCG@5 0.731. For 50 short documents and a 22M-parameter encoder, that is an
+unremarkable, perfectly shippable number. If I only look at aggregates, this
+is where the story ends and the search box gets built.
+
+## A few documents appeared everywhere
+
+What kept me looking was not the six misses but their company. Skimming the
+full query-by-document similarity matrix, a handful of documents sit at
+moderate-to-high similarity against almost every query column, topically
+related or not.
+
+<SimilarityMatrix />
+
+Two failures made the pattern concrete instead of just visible in a heatmap.
+
+For *"the tests pass on my laptop but fail on the build server"* (relevant:
+`ci-env`, `ci-flaky`), the top-ranked document is the **onboarding
+checklist** at 0.506, a generic page about repository access and running
+the test suite locally, with no connection to CI infrastructure beyond
+sharing some vocabulary. `ci-flaky` sits at rank 3, 0.351; `ci-env`, the
+better label, is outside the top five entirely.
+
+For *"shrink the memory footprint of a model without retraining it"*
+(relevant: `gpu-quantization`, `gpu-mixed-precision`), the top result is a
+note about **keeping models resident between requests** at 0.409, with the
+second-place document 0.001 behind it. Neither labeled document reaches the
+top five. Six near-ties inside a margin that thin is not a ranking anyone
+should trust.
+
+And at the other end: six of the fifty documents are never returned in the
+top 5 for any of the 24 queries. In a production index, those six are dead
+weight nobody will ever find through search.
+
+Two different problems, dressed the same. Untangling them is most of what
+follows.
+
+## Measuring hubness
+
+The first problem has a name. A **hub** is a point that shows up in the $k$
+nearest-neighbor list of an unusual number of other points. Writing
+$\mathcal{N}_k(i)$ for the $k$ nearest neighbors of document $i$, the
+$k$-occurrence of document $j$ is
+
+$$
+N_k(j) = \bigl\lvert \{\, i : j \in \mathcal{N}_k(i) \,\} \bigr\rvert.
+$$
+
+Every document spends exactly $k$ outgoing edges, so $N_k$ averages exactly
+$k$ over the corpus, always. The only question is how unevenly that fixed
+budget of incoming edges is spread. The standard summary is its skewness,
+
+$$
+S_{N_k} = \frac{\mathbb{E}\bigl[(N_k - \mu)^3\bigr]}{\sigma^3},
+$$
+
+the statistic Radovanović, Nanopoulos, and Ivanović used to name the
+phenomenon in high-dimensional nearest-neighbor search [1].
+
+<OccurrenceChart />
+
+At $k = 5$ the mean is exactly 5 by construction; the busiest document,
+**KV cache growth with sequence length**, is listed as a neighbor 14 times:
+more than a quarter of the corpus points to it. Two more GPU-memory notes,
+**gradient checkpointing** and **allocator fragmentation**, follow at 12 and
+10. These are not the vague, generic pages I expected going in. They're
+dense, specific documents that happen to sit in the crowded middle of this
+corpus's vocabulary. The eight generic documents average $N_{10}$ of 8.6,
+slightly *below* the corpus-wide average of 10.0, not above it.
+
+Occurrence counts alone don't say whether a busy neighborhood is a problem.
+That depends on whether the traffic crosses topics.
+
+<CrossTopicByK />
+
+At $k = 1$ only 14% of neighbor edges cross a topic boundary; unsurprising,
+tight matches are usually genuine. By $k = 10$ that's 55%: a majority of
+this corpus's ten-nearest-neighbor edges connect documents about different
+things. Widening a retrieval window on a small, unevenly dense index mostly
+buys cross-topic noise.
+
+Reciprocity is the sharpest single check, because it exposes an asymmetry
+cosine similarity itself doesn't have. $\cos(x, y) = \cos(y, x)$ always. The
+$k$-nearest-neighbor *relation* is a different object: $i$ can list $j$ as a
+neighbor without $j$ listing $i$ back, and once a document's in-degree
+exceeds $k$, every additional incoming edge is necessarily one-directional,
+since there just aren't enough outgoing slots left on the other side for it
+to be mutual. At $k = 5$, overall reciprocity is 0.672: two-thirds of neighbor
+edges run both ways, and the busiest documents sit well under that, propped
+up by one-way traffic.
+
+## Why score margin matters
+
+None of the numbers above say whether *rank 1* is correct on any given
+query. Only the relevance labels can say that. But the gap between the
+best and second-best score turns out to carry real signal about it, more
+than the best score alone does.
+
+<MarginAnalysis />
+
+The top score barely separates the two groups: 0.548 on average when rank 1
+is correct, 0.387 when it's wrong: an overlapping spread, not a clean cut.
+The margin to rank 2 separates them far better: 0.184 mean / 0.137 median
+when correct, versus 0.046 mean / 0.011 median when wrong, a full order of
+magnitude apart at the median. The two near-ties from the previous section
+had margins of 0.001 and 0.011. A fixed similarity threshold, which is what
+most retrieval systems actually gate on, cannot see that difference. A
+margin threshold can.
+
+## CSLS as a density correction
+
+Cosine similarity is symmetric and pairwise: $\cos(x, y)$ depends on $x$ and
+$y$ alone, never on how densely populated the space around either one is.
+That's precisely the blind spot hubness exploits: a document sitting in a
+crowded region of the embedding space accumulates a baseline similarity to
+many things, cheaply, just by being where it is.
+
+Cross-domain Similarity Local Scaling (CSLS), introduced by Conneau et al.
+for bilingual lexicon induction (a setting with exactly this failure mode),
+adds a density correction [3]:
+
+$$
+\operatorname{CSLS}(x, y) = 2\cos(x, y) - r_x - r_y,
+$$
+
+where $r_x$ is the mean similarity from $x$ to its own $k$ nearest
+neighbors:
+
+$$
+r_x = \frac{1}{k} \sum_{y' \in \mathcal{N}_k(x)} \cos(x, y').
+$$
+
+```python
+def local_scale(sim_to_reference, k):
+    kth = top_k(sim_to_reference, k)
+    return np.take_along_axis(sim_to_reference, kth, axis=1).mean(axis=1)
+
+def csls_scores(sim, r_rows, r_cols):
+    return 2.0 * sim - r_rows[:, None] - r_cols[None, :]
+```
+
+$r_x$ and $r_y$ penalize each side in proportion to how close it already
+sits to its own neighborhood: a document in a dense region pays more, a
+document in a sparse one pays less. Local density scaling for hub reduction
+predates this specific formula [2]; CSLS is a particular, symmetric version
+of it, computed here with $k = 10$. Inside one query's ranking, $r_x$ (the
+query's own local density) is constant across all candidates, so it shifts
+every score by the same amount without touching the order. The reordering
+comes entirely from $-r_y$, the document side.
+
+## Geometry improves, retrieval barely changes
+
+Rebuilding the document-to-document neighbor graph with CSLS instead of
+cosine, holding $k = 5$ fixed:
+
+<BeforeAfterCsls />
+
+Every one of these moves in the direction CSLS was built to push it: the
+distribution flattens, the busiest hub loses a third of its in-degree, the
+one never-picked document starts getting picked, and two-thirds-reciprocal
+becomes four-fifths. Whatever CSLS is correcting for, it's correcting for it
+consistently, not just on this one document.
+
+<details>
+<summary>Full breakdown at k = 1, 3, 5, 10</summary>
+
+The chart above shows only $k=5$. The correction holds at every $k$ this
+experiment measured. Each cell below reads cosine, then CSLS:
+
+| $k$ | skewness | max $N_k$ | never a neighbor | reciprocity |
+|---|---|---|---|---|
+| 1  | 0.64 / 0.23 | 3 / 3   | 14 / 15 | 0.48 / 0.56 |
+| 3  | 0.78 / 0.44 | 9 / 6   | 5 / 1   | 0.63 / 0.76 |
+| 5  | 0.77 / 0.30 | 14 / 9  | 1 / 0   | 0.67 / 0.81 |
+| 10 | 0.77 / 0.51 | 22 / 19 | 0 / 0   | 0.71 / 0.84 |
+
+</details>
+
+Retrieval quality is a different question, and the answer here is close to
+"no measurable difference":
+
+<RetrievalMetrics />
+
+Precision@1 is unchanged at 0.750: the same 18 of 24 queries land correctly
+either way. Precision@5 and recall@5 don't move at all: 0.292 and 0.771,
+identical to four figures. MRR ticks up from 0.818 to 0.831, and nDCG@5 from
+0.731 to 0.733. Underneath that near-stillness, 21 of the 24 queries
+*reshuffle* their top-5 ranking. CSLS is not simply leaving the ranking
+alone; its rearrangements cancel out in aggregate rather than compounding.
+
+Splitting by query style adds one more wrinkle:
+
+<QueryStyleComparison />
+
+Full sentences improve slightly under CSLS (nDCG@5 0.761 to 0.768); fragments
+get slightly worse (0.642 to 0.628). Fragments start with thinner margins to
+begin with (0.048 mean against 0.183 for full sentences), so they had less
+room to lose before CSLS's reordering started working against them instead
+of for them.
+
+One more result surprised me. Boilerplate retrieval (how often a generic
+document lands in a top-5 slot) went *up* under CSLS, from 9.2% to 10.0%.
+Hubness would predict the opposite, since generic documents weren't the
+hubs. The reason is exactly that: the generic documents sit in comparatively
+*sparse* territory ($r_y \approx 0.305$, against $\approx 0.324$ for the
+corpus overall), so the same density correction that penalizes hubs rewards
+them. A troubleshooting checklist does share real vocabulary with "tests
+fail on the build server." CSLS didn't invent that overlap; it just
+stopped discounting it the way the correction discounts genuine hubs.
+
+## One repaired query, one regression, one unresolved failure
+
+Aggregates hide exactly this kind of trade. Three individual queries make it
+concrete: gains, losses, and a failure neither score fixes.
+
+<QueryExampleCard kind="repaired" figureNumber={7} label="Repaired" />
+
+For *"what chunk size should I use before embedding documents,"* cosine
+ranks a partially-relevant document (`chunking-parent`, about retrieving
+small chunks and returning their parent section) above the labeled answer.
+CSLS's density penalty demotes it and promotes `chunking-truncation` to rank
+1, a genuine repair rather than a coincidence of rounding.
+
+<QueryExampleCard kind="regressed" figureNumber={8} label="Regressed" />
+
+For *"long conversations run out of GPU memory partway through,"* cosine
+already has the right document, `gpu-kv-cache`, at rank 1. CSLS pushes an
+unlabeled document, `gpu-measuring`, ahead of it. Both are real GPU-memory
+documents with real vocabulary overlap; CSLS's density correction doesn't
+know which one the query actually needed, and here it picks wrong.
+
+<QueryExampleCard kind="unresolved" figureNumber={9} label="Unresolved" />
+
+For *"the tests pass on my laptop but fail on the build server,"* the same
+onboarding checklist tops both rankings. CSLS moves the correctly labeled
+`ci-flaky` from rank 3 to rank 2, which is real progress in the geometry,
+but the query still doesn't get a correct rank-1 answer either way. No
+density correction was going to be enough here.
+
+## Geometric failure versus semantic failure
+
+These three queries are the whole argument in miniature. The first is a
+**geometric failure**: a document was over-favored because of where it sits
+relative to the rest of the corpus, and a density correction fixed it. The
+third is a **semantic failure**: a boilerplate document genuinely shares
+vocabulary with the query, cosine scores that overlap accurately, and no
+amount of local-density adjustment changes what the query actually needed.
+The second shows the two failures aren't cleanly separable in advance:
+correcting the geometry can undo a ranking that happened to be right.
+
+Hubness, uneven $N_k$, weak reciprocity, and density imbalance are all
+properties of the *embedding space*, measurable without ever reading a
+document. Lexical overlap outranking relevance, boilerplate beating the
+right answer, and a correct label sitting outside the top-k are properties
+of *what the documents mean*, and no amount of geometric correction reaches
+them. CSLS operates entirely in the first category. Conflating the two is
+the mistake I was implicitly making when I judged the system by aggregate
+metrics alone.
+
+## Production implications
+
+**Retrieval-augmented generation.** Widening $k$ "for more context" pulls in
+cross-topic edges disproportionately (14% at $k=1$ versus 55% at $k=10$ in
+this corpus). A generator that receives everything in a wide top-k inherits
+whatever fraction of it is topically irrelevant. Reranking after retrieval,
+rather than trusting a large top-k directly, is cheap insurance against
+exactly this.
+
+**Vector index choice.** Graph-based ANN indexes (HNSW and relatives) build
+their structure directly from the approximate neighbor relation. A hub in
+the underlying geometry becomes a high-degree node in the index itself,
+which can concentrate traffic at query time the same way it concentrates
+top-k appearances here. Worth checking on indexes built from real corpora,
+separately from anything in this experiment.
+
+**Deduplication and recommendation.** A hub looks, by cosine score alone,
+like it duplicates half the corpus. A one-way similarity threshold will
+over-merge around it; requiring mutual, reciprocal nearest-neighbor status
+before treating two items as duplicates is a much stronger and cheaper
+guard. The same logic applies to a recommender that reuses embedding
+similarity: an unchecked hub becomes everyone's suggestion.
+
+**Score thresholds.** If a system gates on similarity score at all, gate on
+the margin to the runner-up, not the top score alone. The margin separated
+correct from incorrect rankings by roughly an order of magnitude here; the
+top score barely separated them.
+
+## Limitations
+
+Fifty documents, one 384-dimension encoder, one language, one person's
+relevance judgments, written before any embedding existed. That is enough to
+demonstrate the method and to be confident the four measurements
+(occurrence, cross-topic rate, reciprocity, margin) are real properties of
+this corpus under this encoder. It is not evidence about embedding spaces in
+general. A larger, more skewed, or differently-distributed corpus would very
+plausibly show more severe hubness than this deliberately balanced one does;
+a different encoder would produce a different density structure entirely.
+
+Reproducibility has one honest asterisk. Seeds are fixed and PyTorch runs in
+deterministic mode, so re-running on the same machine reproduces
+`hubness.json` byte for byte (confirmed while writing this). Across CPU
+architectures or library versions, floating-point differences in the last
+decimal place can swap documents that are already nearly tied. The aggregate
+statistics in this article are stable under that; individual near-ties, like
+the two 0.001-apart scores above, are not, and that instability is itself
+one of the article's points about trusting raw scores too literally.
+
+## Conclusion
+
+Nothing here shows cosine similarity being wrong. The onboarding checklist
+that outranks the real CI answer for a query about failing tests isn't a
+scoring bug: it actually does share vocabulary with that query, and cosine
+correctly reports that. What I'd been assuming, without quite noticing I was
+assuming it, was that a pairwise, corpus-agnostic metric would rank the way
+relevance does: consistently, regardless of what else the corpus happens to
+contain. It doesn't, because relevance isn't corpus-agnostic and cosine
+similarity is.
+
+The practical version of that: don't ask whether a similarity metric is
+standard. Ask whether the geometry it assumes matches your corpus, your
+encoder, and what your queries actually need, then measure the neighbor
+graph directly instead of trusting an aggregate score to tell you.
+
+## Reproducing this
+
+The corpus, the labels, the experiment script, and the pinned dependency
+versions are in
+[`experiments/embedding-hubness/`](https://github.com/RafaBlockDev/RafaBlockDev.github.io/tree/main/experiments/embedding-hubness)
+in this site's repository. It writes one JSON file that every figure on this
+page reads at build time; no model weights, caches, or virtual environments
+are committed.
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+HF_HOME="$PWD/.hf-cache" .venv/bin/python experiment.py
+```
+
+## References
+
+1. M. Radovanović, A. Nanopoulos, and M. Ivanović. "Hubs in Space: Popular
+   Nearest Neighbors in High-Dimensional Data." *Journal of Machine Learning
+   Research* 11 (2010), 2487–2531.
+   [jmlr.org](https://jmlr.org/papers/v11/radovanovic10a.html)
+2. D. Schnitzer, A. Flexer, M. Schedl, and G. Widmer. "Local and Global
+   Scaling Reduce Hubs in Space." *Journal of Machine Learning Research* 13
+   (2012), 2871–2902.
+   [jmlr.org](https://www.jmlr.org/papers/volume13/schnitzer12a/schnitzer12a.pdf)
+3. A. Conneau, G. Lample, M. Ranzato, L. Denoyer, and H. Jégou. "Word
+   Translation Without Parallel Data." ICLR 2018. arXiv:1710.04087.
+   Introduces CSLS. [arxiv.org](https://arxiv.org/abs/1710.04087)
+4. N. Reimers and I. Gurevych. "Sentence-BERT: Sentence Embeddings using
+   Siamese BERT-Networks." EMNLP-IJCNLP 2019, 3982–3992.
+   [aclanthology.org](https://aclanthology.org/D19-1410/)
+5. `sentence-transformers/all-MiniLM-L6-v2` model card.
+   [huggingface.co](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+6. K. Järvelin and J. Kekäläinen. "Cumulated Gain-based Evaluation of IR
+   Techniques." *ACM Transactions on Information Systems* 20(4) (2002),
+   422–446. [doi.org](https://doi.org/10.1145/582415.582418)

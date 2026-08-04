@@ -1,0 +1,186 @@
+{
+ "queries": [
+  {
+   "id": "q-cold-start",
+   "margin": 0.1431,
+   "topScore": 0.4786,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-throughput",
+   "margin": 0.0873,
+   "topScore": 0.5072,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-vram-long-context",
+   "margin": 0.0178,
+   "topScore": 0.4513,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-shrink-model",
+   "margin": 0.0012,
+   "topScore": 0.4089,
+   "hit": false,
+   "style": "specific"
+  },
+  {
+   "id": "q-vram-numbers",
+   "margin": 0.2994,
+   "topScore": 0.6371,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-chunk-size",
+   "margin": 0.0114,
+   "topScore": 0.5369,
+   "hit": false,
+   "style": "specific"
+  },
+  {
+   "id": "q-chunk-tables",
+   "margin": 0.3548,
+   "topScore": 0.7432,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-duplicate-results",
+   "margin": 0.0746,
+   "topScore": 0.4704,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-index-ignored",
+   "margin": 0.0542,
+   "topScore": 0.5729,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-index-writes",
+   "margin": 0.0064,
+   "topScore": 0.4597,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-index-order",
+   "margin": 0.21,
+   "topScore": 0.6987,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-modal-keyboard",
+   "margin": 0.4131,
+   "topScore": 0.7068,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-reduced-motion",
+   "margin": 0.3499,
+   "topScore": 0.5599,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-screen-reader-nav",
+   "margin": 0.225,
+   "topScore": 0.6367,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-ci-local",
+   "margin": 0.1355,
+   "topScore": 0.5056,
+   "hit": false,
+   "style": "specific"
+  },
+  {
+   "id": "q-ci-install",
+   "margin": 0.4014,
+   "topScore": 0.7194,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "q-ci-slow",
+   "margin": 0.11,
+   "topScore": 0.3881,
+   "hit": false,
+   "style": "specific"
+  },
+  {
+   "id": "q-alt-text",
+   "margin": 0.404,
+   "topScore": 0.6797,
+   "hit": true,
+   "style": "specific"
+  },
+  {
+   "id": "qt-smaller-model",
+   "margin": 0.0113,
+   "topScore": 0.2086,
+   "hit": false,
+   "style": "terse"
+  },
+  {
+   "id": "qt-slow-query",
+   "margin": 0.0039,
+   "topScore": 0.2719,
+   "hit": false,
+   "style": "terse"
+  },
+  {
+   "id": "qt-keyboard",
+   "margin": 0.0234,
+   "topScore": 0.3072,
+   "hit": true,
+   "style": "terse"
+  },
+  {
+   "id": "qt-oom",
+   "margin": 0.131,
+   "topScore": 0.4744,
+   "hit": true,
+   "style": "terse"
+  },
+  {
+   "id": "qt-first-response",
+   "margin": 0.0318,
+   "topScore": 0.3772,
+   "hit": true,
+   "style": "terse"
+  },
+  {
+   "id": "qt-repeated-results",
+   "margin": 0.0843,
+   "topScore": 0.379,
+   "hit": true,
+   "style": "terse"
+  }
+ ],
+ "summary": {
+  "hit": {
+   "n": 18,
+   "mean_margin": 0.184,
+   "median_margin": 0.1371,
+   "mean_top_score": 0.5477
+  },
+  "miss": {
+   "n": 6,
+   "mean_margin": 0.0456,
+   "median_margin": 0.0113,
+   "mean_top_score": 0.3867
+  }
+ }
+}

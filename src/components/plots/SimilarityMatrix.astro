@@ -1,0 +1,110 @@
+---
+import matrix from '../../data/embedding-hubness/figures/matrix.json';
+
+const { queryKeys } = matrix;
+---
+
+<details id="fig-matrix-details" class="not-prose my-8 border border-ink/10 rounded-sm px-4 py-3">
+  <summary class="cursor-pointer font-mono text-xs uppercase tracking-wide text-accent">
+    Secondary evidence: full query–document cosine similarity matrix
+  </summary>
+
+  <div class="mt-4">
+    <p class="max-w-2xl text-sm text-ink/70">
+      All 24 queries against all 50 documents under plain cosine similarity. The diagonal-ish blocks are
+      topic groups; darker cells outside a query's own block are where a hub or a lexical near-miss pulls
+      score upward.
+    </p>
+
+    <div
+      id="fig-matrix"
+      class="mx-auto mt-4 w-full max-w-3xl overflow-x-auto"
+      role="img"
+      aria-label="Query by document cosine similarity matrix"
+      aria-describedby="fig-matrix-desc"
+      style="min-height: 20rem;"
+    >
+    </div>
+    <p id="fig-matrix-desc" class="sr-only">
+      Heatmap with 24 rows, one per query labeled Q01 through Q24, and 50 columns, one per document,
+      grouped by topic. Cell color encodes cosine similarity between that query and that document. A
+      readable key mapping each row label to its full query text follows the figure.
+    </p>
+    <p class="mt-3 text-center font-mono text-xs text-ink/60">
+      Rows Q01–Q24, columns the 50 documents grouped by topic. Query text keyed below.
+    </p>
+
+    <div class="mt-6">
+      <p class="font-mono text-xs uppercase tracking-wide text-accent">Query key</p>
+      <ul class="mt-2 grid grid-cols-1 gap-x-6 gap-y-1 text-xs text-ink/75 sm:grid-cols-2">
+        {
+          queryKeys.map((q) => (
+            <li>
+              <span class="font-mono text-ink/50">{q.row}</span> {q.text}
+              {q.style === 'terse' && <span class="text-ink/40"> (fragment)</span>}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</details>
+
+<script>
+  import * as Plot from '@observablehq/plot';
+  import matrix from '../../data/embedding-hubness/figures/matrix.json';
+  import { COLORS, baseStyle } from './plot-theme';
+
+  const details = document.getElementById('fig-matrix-details') as HTMLDetailsElement | null;
+  const container = document.getElementById('fig-matrix');
+  if (details && container) {
+    const { cells, documents, queryKeys } = matrix;
+    const rowDomain = queryKeys.map((q: any) => q.row);
+    const docDomain = documents.map((d: any) => d.id);
+    const values = cells.map((c: any) => c.value);
+    const minV = Math.min(...values);
+    const maxV = Math.max(...values);
+
+    let painted = false;
+    let frame: number | null = null;
+
+    const paint = () => {
+      const width = Math.max(container.clientWidth, 320);
+      const plot = Plot.plot({
+        width,
+        height: rowDomain.length * 15 + 40,
+        marginLeft: 34,
+        marginRight: 10,
+        marginTop: 8,
+        marginBottom: 34,
+        style: baseStyle,
+        x: { domain: docDomain, axis: null, paddingOuter: 0 },
+        y: { domain: rowDomain, label: null, tickSize: 0 },
+        color: {
+          type: 'linear',
+          domain: [minV, maxV],
+          range: [COLORS.paper, COLORS.accent],
+          legend: true,
+          label: 'cosine similarity',
+          ticks: 4
+        },
+        marks: [Plot.cell(cells, { x: 'doc', y: 'row', fill: 'value' })]
+      });
+      container.replaceChildren(plot);
+    };
+
+    const observer = new ResizeObserver(() => {
+      if (!painted) return;
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(paint);
+    });
+
+    details.addEventListener('toggle', () => {
+      if (details.open && !painted) {
+        painted = true;
+        paint();
+        observer.observe(container);
+      }
+    });
+  }
+</script>

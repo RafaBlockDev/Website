@@ -1,0 +1,103 @@
+---
+import ObservablePlot from './ObservablePlot.astro';
+import beforeAfter from '../../data/embedding-hubness/figures/before-after.json';
+
+const { metrics, k } = beforeAfter;
+const fmt = (v: number, digits: number) => v.toFixed(digits);
+---
+
+<ObservablePlot
+  id="fig-before-after"
+  title={`Figure 4 · Does CSLS flatten the neighbor graph? (k = ${k})`}
+  description="Four measures of neighbor-graph structure, cosine on the left of each arrow, CSLS on the right."
+  srDescription={`Four paired comparisons of document-graph statistics under cosine and CSLS at k=${k}: ${metrics
+    .map((m: any) => `${m.label} moves from ${fmt(m.before, m.digits)} to ${fmt(m.after, m.digits)}`)
+    .join('; ')}.`}
+  caption="Muted dot: cosine. Accent dot: CSLS. Each panel has its own scale; these four statistics are not comparable to one another."
+  maxWidth="42rem"
+  minHeight="15rem"
+>
+</ObservablePlot>
+
+<script>
+  import * as Plot from '@observablehq/plot';
+  import beforeAfter from '../../data/embedding-hubness/figures/before-after.json';
+  import { COLORS, baseStyle } from './plot-theme';
+
+  const container = document.getElementById('fig-before-after');
+  if (container) {
+    const { metrics } = beforeAfter;
+
+    const paint = () => {
+      const width = Math.max(container.clientWidth, 220);
+      const twoCol = width >= 420;
+      const panelWidth = twoCol ? width / 2 - 12 : width;
+
+      const grid = document.createElement('div');
+      grid.className = twoCol ? 'grid grid-cols-2 gap-x-4 gap-y-2' : 'flex flex-col gap-2';
+
+      for (const m of metrics) {
+        const panel = document.createElement('div');
+        const span = Math.max(Math.abs(m.after - m.before), 1e-6);
+        const pad = span * 0.6 + (m.digits === 0 ? 1 : 0);
+        const lo = Math.min(m.before, m.after) - pad;
+        const hi = Math.max(m.before, m.after) + pad;
+
+        const plot = Plot.plot({
+          width: panelWidth,
+          height: 78,
+          marginLeft: 8,
+          marginRight: 44,
+          marginTop: 22,
+          marginBottom: 6,
+          style: baseStyle,
+          x: { domain: [lo, hi], axis: null },
+          y: { domain: [0, 1], axis: null },
+          marks: [
+            Plot.text([m], { x: () => lo, y: 1, text: () => m.label, textAnchor: 'start', dy: -8, fill: COLORS.ink, fontSize: 11 }),
+            Plot.arrow([m], {
+              x1: 'before',
+              y1: 0.5,
+              x2: 'after',
+              y2: 0.5,
+              stroke: COLORS.accent,
+              strokeWidth: 1.5,
+              headLength: 6,
+              insetEnd: 6
+            }),
+            Plot.dot([m], { x: 'before', y: 0.5, fill: COLORS.inkMuted, r: 4.5 }),
+            Plot.dot([m], { x: 'after', y: 0.5, fill: COLORS.accent, r: 4.5 }),
+            Plot.text([m], {
+              x: 'before',
+              y: 0.5,
+              text: (d: any) => d.before.toFixed(d.digits),
+              dy: 16,
+              fill: COLORS.inkMuted,
+              fontSize: 11
+            }),
+            Plot.text([m], {
+              x: 'after',
+              y: 0.5,
+              text: (d: any) => d.after.toFixed(d.digits),
+              dy: 16,
+              fill: COLORS.accent,
+              fontWeight: 'bold',
+              fontSize: 11
+            })
+          ]
+        });
+        panel.append(plot);
+        grid.append(panel);
+      }
+
+      container.replaceChildren(grid);
+    };
+
+    paint();
+    let frame: number | null = null;
+    new ResizeObserver(() => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(paint);
+    }).observe(container);
+  }
+</script>

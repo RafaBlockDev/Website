@@ -1,0 +1,65 @@
+---
+import ObservablePlot from './ObservablePlot.astro';
+import occurrence from '../../data/embedding-hubness/figures/occurrence.json';
+
+const { documents, expected } = occurrence;
+const rowHeight = 26;
+const height = documents.length * rowHeight + 30;
+---
+
+<ObservablePlot
+  id="fig-occurrence"
+  title={`Figure 1 · Neighbor occurrence at k = ${occurrence.k}`}
+  description="The ten documents most often listed as a nearest neighbor of some other document. A dashed line marks the expected average, 5."
+  srDescription={`Horizontal bar chart of the ten documents with the highest N${occurrence.k} occurrence count, the number of other documents that list them among their ${occurrence.k} nearest neighbors. Every document averages exactly ${expected} by construction; three documents reach ${documents[0].count}, ${documents[1].count}, and ${documents[2].count}, well above that average, and are marked as hubs.`}
+  caption={`N${occurrence.k}(j): how many of the other 49 documents list j among their ${occurrence.k} nearest neighbors. Dashed line at the expected average (${expected}).`}
+  maxWidth="38rem"
+  minHeight={`${height}px`}
+>
+</ObservablePlot>
+
+<script>
+  import * as Plot from '@observablehq/plot';
+  import occurrence from '../../data/embedding-hubness/figures/occurrence.json';
+  import { COLORS, baseStyle, renderResponsive, subscript } from './plot-theme';
+
+  const container = document.getElementById('fig-occurrence');
+  if (container) {
+    const { documents, expected } = occurrence;
+    const labels = documents.map((d) => d.label);
+    const rowHeight = 26;
+
+    renderResponsive(container, (width) =>
+      Plot.plot({
+        width,
+        height: documents.length * rowHeight + 30,
+        marginLeft: 210,
+        marginRight: 30,
+        marginTop: 6,
+        marginBottom: 24,
+        style: baseStyle,
+        x: { label: `N${subscript(expected)}`, labelAnchor: 'center', labelArrow: false, grid: true, nice: true },
+        y: { domain: labels, label: null },
+        marks: [
+          Plot.ruleX([expected], { stroke: COLORS.inkMuted, strokeDasharray: '3,2' }),
+          Plot.barX(documents, {
+            y: 'label',
+            x: 'count',
+            fill: (d) => (d.isHub ? COLORS.hub : COLORS.accentMuted),
+            insetTop: 4,
+            insetBottom: 4
+          }),
+          Plot.text(
+            documents.filter((d) => !d.isHub),
+            { y: 'label', x: 'count', text: (d) => String(d.count), dx: 8, textAnchor: 'start', fill: COLORS.ink }
+          ),
+          Plot.text(
+            documents.filter((d) => d.isHub),
+            { y: 'label', x: 'count', text: (d) => String(d.count), dx: 8, textAnchor: 'start', fill: COLORS.ink, fontWeight: 'bold' }
+          ),
+          Plot.ruleX([0])
+        ]
+      })
+    );
+  }
+</script>

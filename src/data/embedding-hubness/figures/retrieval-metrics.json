@@ -1,0 +1,23 @@
+{
+ "k": 5,
+ "metrics": [
+  {
+   "key": "p_at_1",
+   "label": "Precision@1",
+   "cosine": 0.75,
+   "csls": 0.75
+  },
+  {
+   "key": "mrr",
+   "label": "MRR",
+   "cosine": 0.8181,
+   "csls": 0.8312
+  },
+  {
+   "key": "ndcg_at_5",
+   "label": "nDCG@5",
+   "cosine": 0.7312,
+   "csls": 0.7334
+  }
+ ]
+}

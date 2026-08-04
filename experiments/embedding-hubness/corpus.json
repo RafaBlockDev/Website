@@ -1,0 +1,444 @@
+{
+  "meta": {
+    "description": "Fixed corpus and labelled query set for the embedding-hubness experiment. Documents imitate retrieval chunks from an internal engineering wiki: short, self-contained, and unevenly specific. The `generic` topic holds deliberately diffuse, mixed-vocabulary documents of the kind that accumulate in real wikis. Queries carrying `style: terse` are short and keyword-poor; the rest are full sentences. Relevance labels were assigned by hand before any embedding was computed.",
+    "topics": {
+      "serving": "Model loading and inference serving",
+      "gpu": "GPU memory and quantization",
+      "chunking": "Document chunking for retrieval",
+      "indexing": "Database indexing",
+      "a11y": "Frontend accessibility",
+      "ci": "Continuous integration failures",
+      "generic": "Broad, low-specificity documentation"
+    }
+  },
+  "documents": [
+    {
+      "id": "serving-cold-start",
+      "topic": "serving",
+      "title": "Cold start latency on a new replica",
+      "text": "A replica that has just been scheduled must read the model weights from disk before it can answer anything. The first request after a scale-up therefore pays several seconds of load time that steady-state requests never see. Pre-pulling the weights into the image or onto a local volume removes most of that delay."
+    },
+    {
+      "id": "serving-batching",
+      "topic": "serving",
+      "title": "Dynamic batching for throughput",
+      "text": "Grouping concurrent requests into a single forward pass raises GPU utilisation substantially. The scheduler waits a few milliseconds to collect a batch, which costs a small amount of latency per request and buys a large gain in tokens per second. The wait window is the tuning knob."
+    },
+    {
+      "id": "serving-warm-pool",
+      "topic": "serving",
+      "title": "Keeping models resident between requests",
+      "text": "Unloading a model after every request keeps memory free but reintroduces load cost on the next call. A warm pool holds a fixed number of initialised workers so that the weights stay resident. The tradeoff is idle memory against tail latency."
+    },
+    {
+      "id": "serving-export",
+      "topic": "serving",
+      "title": "Exporting to ONNX for faster inference",
+      "text": "Tracing a model to ONNX or TorchScript removes Python dispatch overhead and lets the runtime fuse operators. Control flow that depends on tensor values does not trace cleanly and has to be rewritten first. Numerical output should be compared against the eager model before the export is trusted."
+    },
+    {
+      "id": "serving-streaming",
+      "topic": "serving",
+      "title": "Streaming output and time to first token",
+      "text": "Users judge a generation endpoint mostly by how quickly the first token arrives, not by total completion time. Streaming the response lets the client render partial output while decoding continues. Buffering proxies in front of the service silently defeat this and need explicit configuration."
+    },
+    {
+      "id": "serving-versions",
+      "topic": "serving",
+      "title": "Routing between model versions",
+      "text": "Serving two model versions behind one endpoint allows a gradual rollout with a fixed traffic split. The router must pin a session to one version so a single conversation does not switch models mid-way. Per-version metrics are required or the comparison is meaningless."
+    },
+    {
+      "id": "serving-tokenizer",
+      "topic": "serving",
+      "title": "Tokenizer mismatch between training and serving",
+      "text": "Loading the model weights from one checkpoint and the tokenizer from another produces output that is fluent but subtly wrong. The failure is silent because no shape error occurs. Pinning both artefacts to the same revision hash is the only reliable fix."
+    },
+    {
+      "id": "gpu-oom-inference",
+      "topic": "gpu",
+      "title": "Out of memory during inference",
+      "text": "Inference runs out of memory when peak activation memory, not weight memory, exceeds what is free. Long inputs and large batches raise the peak sharply because attention intermediates scale with sequence length. Lowering the batch size is usually faster to try than any other change."
+    },
+    {
+      "id": "gpu-quantization",
+      "topic": "gpu",
+      "title": "Weight quantization tradeoffs",
+      "text": "Quantising weights to eight or four bits cuts the memory footprint roughly in proportion to the bit width. Accuracy loss is small on most tasks but concentrates on rare tokens and long-tail inputs, so an aggregate benchmark can hide it. The evaluation set has to include the cases that matter."
+    },
+    {
+      "id": "gpu-kv-cache",
+      "topic": "gpu",
+      "title": "KV cache growth with sequence length",
+      "text": "The key-value cache grows linearly with context length and with the number of concurrent sequences. On long conversations it eventually dominates the weights themselves. Capping the number of concurrent long sessions bounds the memory more predictably than trimming batch size."
+    },
+    {
+      "id": "gpu-checkpointing",
+      "topic": "gpu",
+      "title": "Gradient checkpointing during training",
+      "text": "Recomputing activations in the backward pass instead of storing them trades roughly thirty percent extra compute for a large drop in memory. It makes otherwise impossible batch sizes fit on a single device. The saving depends on which blocks are marked as checkpoints."
+    },
+    {
+      "id": "gpu-measuring",
+      "topic": "gpu",
+      "title": "Measuring VRAM correctly",
+      "text": "The figure reported by nvidia-smi includes memory the caching allocator has reserved but is not currently using. Framework-level allocator statistics show the allocated and reserved numbers separately. Comparing the wrong two figures leads to chasing a leak that does not exist."
+    },
+    {
+      "id": "gpu-mixed-precision",
+      "topic": "gpu",
+      "title": "Mixed precision formats",
+      "text": "Half precision halves activation memory and speeds up matrix multiplication on tensor cores. The bfloat16 format keeps the exponent range of float32 and so avoids most of the overflow problems of float16. Loss scaling is needed for the latter and not for the former."
+    },
+    {
+      "id": "gpu-fragmentation",
+      "topic": "gpu",
+      "title": "Allocator fragmentation",
+      "text": "A job can fail to allocate a block while total free memory is comfortably larger than the request, because the free space is split into pieces. Varying input shapes make this worse by producing many differently sized blocks. Padding inputs to a small set of bucket sizes reduces the effect."
+    },
+    {
+      "id": "chunking-fixed-vs-semantic",
+      "topic": "chunking",
+      "title": "Fixed-size versus boundary-aware chunking",
+      "text": "Splitting on a fixed token count is simple and cuts sentences in half. Splitting on sentence or paragraph boundaries preserves meaning but produces chunks of uneven length, which biases similarity scores towards the shorter ones. Neither default is right for every document type."
+    },
+    {
+      "id": "chunking-overlap",
+      "topic": "chunking",
+      "title": "Overlap between adjacent chunks",
+      "text": "A sliding window with overlap keeps a statement and its qualifying clause in the same chunk when they straddle a boundary. The cost is duplicated content, which inflates the index and makes near-duplicate results common. Ten to fifteen percent overlap is a reasonable starting point."
+    },
+    {
+      "id": "chunking-truncation",
+      "topic": "chunking",
+      "title": "Chunks longer than the encoder window",
+      "text": "An encoder with a two hundred and fifty six token limit silently truncates anything longer, so the tail of a long chunk never reaches the embedding. Retrieval then appears to work while ignoring half the text. Chunk size should be set from the encoder limit, not from a round number."
+    },
+    {
+      "id": "chunking-metadata",
+      "topic": "chunking",
+      "title": "Carrying headings into the chunk",
+      "text": "A chunk taken from the middle of a page loses the section title that gave it context. Prefixing each chunk with its heading path restores enough of that context to disambiguate similar passages from different sections. It also gives the reranker something to work with."
+    },
+    {
+      "id": "chunking-tables",
+      "topic": "chunking",
+      "title": "Tables and code blocks defeat naive splitters",
+      "text": "A character-based splitter cuts a table between its header and its rows, leaving both halves useless. Code blocks suffer the same way when a function is split across two chunks. Detecting these structures and keeping them whole matters more than the exact chunk size."
+    },
+    {
+      "id": "chunking-dedup",
+      "topic": "chunking",
+      "title": "Near-duplicate chunks in the index",
+      "text": "Boilerplate headers, licence blocks and repeated warnings produce many chunks that are nearly identical. They crowd out genuinely different passages in the top results. Removing exact duplicates is cheap; removing near-duplicates needs a similarity threshold that has to be chosen by inspection."
+    },
+    {
+      "id": "chunking-parent",
+      "topic": "chunking",
+      "title": "Retrieving small and returning large",
+      "text": "Embedding small chunks improves the precision of the match, while the generator usually needs more surrounding text than the chunk contains. Indexing the small unit and returning its parent section gives both. The mapping from chunk to parent has to survive reindexing."
+    },
+    {
+      "id": "indexing-column-order",
+      "topic": "indexing",
+      "title": "Column order in a composite index",
+      "text": "A composite index can only be used from its leading column onwards, so an index on the pair in the wrong order is useless for a query that filters on the second column alone. Equality columns belong before range columns. Reordering an existing index is often cheaper than adding another."
+    },
+    {
+      "id": "indexing-unused",
+      "topic": "indexing",
+      "title": "The planner ignores an index that exists",
+      "text": "Wrapping a column in a function, or comparing it against a different type, prevents the planner from using an index on it. An expression index or an explicit cast restores the match. The plan will show a sequential scan even though the index is present and valid."
+    },
+    {
+      "id": "indexing-write-cost",
+      "topic": "indexing",
+      "title": "Write amplification from redundant indexes",
+      "text": "Every index has to be updated on insert, update and delete, so a table with a dozen indexes writes far more than a table with three. Indexes that no query uses cost writes and disk for nothing. Usage statistics identify them before they are dropped."
+    },
+    {
+      "id": "indexing-partial",
+      "topic": "indexing",
+      "title": "Partial indexes for skewed predicates",
+      "text": "When queries always filter on a small subset, such as rows still marked pending, an index restricted by that predicate is a fraction of the size of the full one. It stays in cache and is cheaper to maintain. The predicate in the query has to match the one in the index definition."
+    },
+    {
+      "id": "indexing-explain",
+      "topic": "indexing",
+      "title": "Reading an execution plan",
+      "text": "The estimated row counts in a plan matter more than the cost numbers, because a large gap between estimate and actual explains most bad plan choices. Nested loops over a badly estimated outer relation are the usual symptom. Refreshing statistics fixes more plans than adding indexes does."
+    },
+    {
+      "id": "indexing-bloat",
+      "topic": "indexing",
+      "title": "Index bloat after heavy updates",
+      "text": "Repeated updates leave dead entries that inflate an index well beyond the size its live rows require. Scans then read more pages than they need to. Rebuilding concurrently reclaims the space without taking an exclusive lock on the table."
+    },
+    {
+      "id": "indexing-covering",
+      "topic": "indexing",
+      "title": "Covering indexes and index-only scans",
+      "text": "If every column a query touches is present in the index, the engine can answer from the index alone and never visit the heap. Including extra payload columns widens the index and slows other queries slightly. Visibility information must also be current for the scan to stay index-only."
+    },
+    {
+      "id": "a11y-focus",
+      "topic": "a11y",
+      "title": "Visible focus indicators",
+      "text": "Removing the default outline makes keyboard navigation impossible to follow, because nothing shows where the cursor is. A replacement indicator has to be visible against every background it appears on. Styling the focus-visible state rather than focus avoids showing a ring after a mouse click."
+    },
+    {
+      "id": "a11y-contrast",
+      "topic": "a11y",
+      "title": "Text contrast ratios",
+      "text": "Body text needs a contrast ratio of at least four and a half to one against its background, and large text at least three to one. Grey placeholder text and low-opacity captions are the usual failures. Contrast has to be checked in every theme the site offers, not only the default one."
+    },
+    {
+      "id": "a11y-labels",
+      "topic": "a11y",
+      "title": "Form labels and descriptions",
+      "text": "A placeholder is not a label: it disappears as soon as the field is filled and is not reliably announced. Every control needs a persistent label associated with it, and any hint or error text should be linked through a description reference so it is read with the field."
+    },
+    {
+      "id": "a11y-modal",
+      "topic": "a11y",
+      "title": "Keyboard behaviour in dialogs",
+      "text": "An open dialog must move focus into itself, keep focus inside while it is open, close on the escape key, and return focus to the element that opened it. Missing the last step strands keyboard users at the top of the page. A dialog that traps focus permanently is worse than no dialog."
+    },
+    {
+      "id": "a11y-alt-text",
+      "topic": "a11y",
+      "title": "Alternative text for images",
+      "text": "An image that carries information needs text conveying the same information, while a purely decorative image needs an empty alternative so it is skipped. Describing a chart as a chart is useless; the description has to state what the chart shows. Filenames are never acceptable as alternative text."
+    },
+    {
+      "id": "a11y-motion",
+      "topic": "a11y",
+      "title": "Respecting reduced motion preferences",
+      "text": "Parallax, autoplaying transitions and large movement can cause nausea for people with vestibular disorders. A media query exposes the operating system preference so those animations can be reduced to a fade or removed. The preference should be honoured for scroll behaviour as well."
+    },
+    {
+      "id": "a11y-structure",
+      "topic": "a11y",
+      "title": "Headings and landmarks",
+      "text": "Screen reader users navigate a long page by jumping between headings, so a hierarchy that skips levels or uses headings for visual size breaks that navigation. Landmark regions let the same users skip repeated navigation. A single main region per page is the expectation."
+    },
+    {
+      "id": "ci-flaky",
+      "topic": "ci",
+      "title": "Flaky tests from ordering and timing",
+      "text": "A test that passes alone and fails in a suite usually depends on state another test left behind, or on a fixed sleep that is long enough on a fast machine only. Randomising test order surfaces the first class. Replacing sleeps with explicit waits on a condition surfaces the second."
+    },
+    {
+      "id": "ci-cache",
+      "topic": "ci",
+      "title": "Cache keys that never match",
+      "text": "A cache key built from a file that changes on every run never hits, so the job rebuilds from scratch while the logs claim caching is enabled. Keys should be derived from the lockfile and the runtime version. A restore key gives a partial hit when the exact key is missing."
+    },
+    {
+      "id": "ci-env",
+      "topic": "ci",
+      "title": "Passes locally, fails in the pipeline",
+      "text": "The usual causes are an environment variable set only on the developer machine, a file present locally but not committed, and a different default locale or timezone on the runner. Printing the resolved configuration at the start of the job makes the difference visible in one run."
+    },
+    {
+      "id": "ci-lockfile",
+      "topic": "ci",
+      "title": "Lockfile drift breaks the install step",
+      "text": "Installing with a frozen lockfile fails when the manifest and the lockfile disagree, which happens whenever a dependency is edited by hand. The failure is desirable: it catches an unreproducible install before it reaches a build. Regenerating the lockfile and committing it is the fix."
+    },
+    {
+      "id": "ci-disk",
+      "topic": "ci",
+      "title": "Runner disk exhaustion",
+      "text": "Layer caches, build artefacts and container images fill a hosted runner faster than expected, and the resulting error names whatever step happened to be writing at the time. The real cause is visible only in a disk usage report. Pruning images before the build step is usually enough."
+    },
+    {
+      "id": "ci-timeouts",
+      "topic": "ci",
+      "title": "Integration tests exceeding the job timeout",
+      "text": "A suite that grows past the job limit starts failing without any test itself failing. Splitting the suite across parallel jobs shortens the wall clock without changing the tests. A per-test timeout gives a clearer error than a job-level one."
+    },
+    {
+      "id": "ci-matrix",
+      "topic": "ci",
+      "title": "One matrix entry fails",
+      "text": "When a single operating system in the matrix fails, path separators, case-sensitive filesystems and line endings account for most cases. Reproducing on the failing platform is faster than reasoning about it. Marking that entry as allowed to fail hides the problem rather than solving it."
+    },
+    {
+      "id": "generic-troubleshooting",
+      "topic": "generic",
+      "title": "General troubleshooting guidance",
+      "text": "When a component misbehaves, read the logs first, confirm the configuration matches the documented values, and check that the machine has enough memory and disk space. Re-run the failing step once before changing anything. Many transient problems clear after a restart. If the problem persists, record the version, the environment and the exact command, then escalate."
+    },
+    {
+      "id": "generic-performance",
+      "topic": "generic",
+      "title": "Performance checklist",
+      "text": "Measure before optimising anything. Record the current latency and throughput, identify the slowest step, and change one variable at a time. Caching, batching and indexing all help in the right place and hurt in the wrong one. Re-measure after every change and keep the numbers where the next person can find them."
+    },
+    {
+      "id": "generic-overview",
+      "topic": "generic",
+      "title": "Platform documentation overview",
+      "text": "This documentation describes the services that make up the platform, how requests flow between them, where data is stored, and how the build and deployment pipeline is wired together. Each section states the purpose of a component, its configuration, its limits, and the failure modes seen most often in practice."
+    },
+    {
+      "id": "generic-faq",
+      "topic": "generic",
+      "title": "Frequently asked questions",
+      "text": "Questions that come up repeatedly are collected here with short answers: how to configure a component, why a step is slower than expected, what a particular error message means, how much memory something needs, and how to recover after a failed run. Each answer links to the section that explains it properly."
+    },
+    {
+      "id": "generic-glossary",
+      "topic": "generic",
+      "title": "Glossary of terms",
+      "text": "Terms used across the documentation are defined here: the units used for memory and latency, what counts as a request, what a job, a run and a step mean in the pipeline, and how an index, a cache and a store are distinguished. Where an industry term is used in a narrower sense, the narrower sense is stated."
+    },
+    {
+      "id": "generic-onboarding",
+      "topic": "generic",
+      "title": "Onboarding checklist",
+      "text": "New engineers should get repository access, install the toolchain, run the test suite locally, deploy a change to the staging environment, and read the architecture summary before picking up a first task. Anything on this list that fails on a clean machine is a documentation defect and should be reported as one."
+    },
+    {
+      "id": "generic-release-notes",
+      "topic": "generic",
+      "title": "Release notes summary",
+      "text": "Every release lists new capabilities, fixed defects, measured performance changes, and anything that requires action before upgrading. Changes to default values, to configuration keys, and to memory or storage requirements are called out at the top together with migration steps. Older entries are kept unmodified."
+    },
+    {
+      "id": "generic-escalation",
+      "topic": "generic",
+      "title": "Reporting a problem",
+      "text": "A useful report states the version in use, the exact steps that reproduce the problem, the configuration in effect, the resources available on the machine, and the logs from the failing run. Problems that block a release are picked up immediately; everything else is scheduled. A fix is not written without a reproduction."
+    }
+  ],
+  "queries": [
+    {
+      "id": "q-cold-start",
+      "text": "why is the first request to my model endpoint so slow after a deploy",
+      "relevant": ["serving-cold-start", "serving-warm-pool"]
+    },
+    {
+      "id": "q-throughput",
+      "text": "how do I increase inference throughput on the same GPU",
+      "relevant": ["serving-batching", "serving-export"]
+    },
+    {
+      "id": "q-vram-long-context",
+      "text": "long conversations run out of GPU memory partway through",
+      "relevant": ["gpu-kv-cache", "gpu-oom-inference"]
+    },
+    {
+      "id": "q-shrink-model",
+      "text": "shrink the memory footprint of a model without retraining it",
+      "relevant": ["gpu-quantization", "gpu-mixed-precision"]
+    },
+    {
+      "id": "q-vram-numbers",
+      "text": "the reported GPU memory usage does not match what the process allocated",
+      "relevant": ["gpu-measuring", "gpu-fragmentation"]
+    },
+    {
+      "id": "q-chunk-size",
+      "text": "what chunk size should I use before embedding documents",
+      "relevant": ["chunking-truncation", "chunking-fixed-vs-semantic"]
+    },
+    {
+      "id": "q-chunk-tables",
+      "text": "my splitter cuts tables and code blocks in half",
+      "relevant": ["chunking-tables", "chunking-fixed-vs-semantic"]
+    },
+    {
+      "id": "q-duplicate-results",
+      "text": "the same boilerplate passage keeps showing up in the results",
+      "relevant": ["chunking-dedup", "chunking-overlap"]
+    },
+    {
+      "id": "q-index-ignored",
+      "text": "the database ignores the index and does a sequential scan",
+      "relevant": ["indexing-unused", "indexing-explain"]
+    },
+    {
+      "id": "q-index-writes",
+      "text": "inserts got slower after we added several indexes",
+      "relevant": ["indexing-write-cost", "indexing-bloat"]
+    },
+    {
+      "id": "q-index-order",
+      "text": "does the order of columns in a multi column index matter",
+      "relevant": ["indexing-column-order", "indexing-covering"]
+    },
+    {
+      "id": "q-modal-keyboard",
+      "text": "keyboard users get stuck when a dialog opens",
+      "relevant": ["a11y-modal", "a11y-focus"]
+    },
+    {
+      "id": "q-reduced-motion",
+      "text": "disable animations for people who prefer less movement",
+      "relevant": ["a11y-motion"]
+    },
+    {
+      "id": "q-screen-reader-nav",
+      "text": "screen reader users cannot find the sections of a long page",
+      "relevant": ["a11y-structure", "a11y-labels"]
+    },
+    {
+      "id": "q-ci-local",
+      "text": "the tests pass on my laptop but fail on the build server",
+      "relevant": ["ci-env", "ci-flaky"]
+    },
+    {
+      "id": "q-ci-install",
+      "text": "the install step fails because the lockfile is out of date",
+      "relevant": ["ci-lockfile", "ci-cache"]
+    },
+    {
+      "id": "q-ci-slow",
+      "text": "the pipeline is cancelled for taking too long",
+      "relevant": ["ci-timeouts", "ci-disk"]
+    },
+    {
+      "id": "q-alt-text",
+      "text": "what should the alternative text of a chart say",
+      "relevant": ["a11y-alt-text"]
+    },
+    {
+      "id": "qt-smaller-model",
+      "text": "make the model smaller",
+      "style": "terse",
+      "relevant": ["gpu-quantization", "gpu-mixed-precision"]
+    },
+    {
+      "id": "qt-slow-query",
+      "text": "the query is slow",
+      "style": "terse",
+      "relevant": ["indexing-explain", "indexing-unused"]
+    },
+    {
+      "id": "qt-keyboard",
+      "text": "the site does not work with a keyboard",
+      "style": "terse",
+      "relevant": ["a11y-focus", "a11y-modal"]
+    },
+    {
+      "id": "qt-oom",
+      "text": "out of memory",
+      "style": "terse",
+      "relevant": ["gpu-oom-inference", "gpu-fragmentation"]
+    },
+    {
+      "id": "qt-first-response",
+      "text": "the first response takes too long",
+      "style": "terse",
+      "relevant": ["serving-cold-start", "serving-streaming"]
+    },
+    {
+      "id": "qt-repeated-results",
+      "text": "the results repeat themselves",
+      "style": "terse",
+      "relevant": ["chunking-dedup", "chunking-overlap"]
+    }
+  ]
+}

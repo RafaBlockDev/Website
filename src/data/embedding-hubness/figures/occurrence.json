@@ -1,0 +1,87 @@
+{
+ "k": 5,
+ "expected": 5,
+ "hubThreshold": 10,
+ "documents": [
+  {
+   "id": "gpu-kv-cache",
+   "label": "KV cache growth with sequence…",
+   "title": "KV cache growth with sequence length",
+   "topic": "gpu",
+   "count": 14,
+   "isHub": true
+  },
+  {
+   "id": "gpu-checkpointing",
+   "label": "Gradient checkpointing during…",
+   "title": "Gradient checkpointing during training",
+   "topic": "gpu",
+   "count": 12,
+   "isHub": true
+  },
+  {
+   "id": "gpu-fragmentation",
+   "label": "Allocator fragmentation",
+   "title": "Allocator fragmentation",
+   "topic": "gpu",
+   "count": 10,
+   "isHub": true
+  },
+  {
+   "id": "generic-escalation",
+   "label": "Reporting a problem",
+   "title": "Reporting a problem",
+   "topic": "generic",
+   "count": 9,
+   "isHub": false
+  },
+  {
+   "id": "serving-batching",
+   "label": "Dynamic batching for throughput",
+   "title": "Dynamic batching for throughput",
+   "topic": "serving",
+   "count": 8,
+   "isHub": false
+  },
+  {
+   "id": "gpu-oom-inference",
+   "label": "Out of memory during inference",
+   "title": "Out of memory during inference",
+   "topic": "gpu",
+   "count": 8,
+   "isHub": false
+  },
+  {
+   "id": "chunking-parent",
+   "label": "Retrieving small and returning…",
+   "title": "Retrieving small and returning large",
+   "topic": "chunking",
+   "count": 8,
+   "isHub": false
+  },
+  {
+   "id": "indexing-partial",
+   "label": "Partial indexes for skewed…",
+   "title": "Partial indexes for skewed predicates",
+   "topic": "indexing",
+   "count": 8,
+   "isHub": false
+  },
+  {
+   "id": "indexing-bloat",
+   "label": "Index bloat after heavy updates",
+   "title": "Index bloat after heavy updates",
+   "topic": "indexing",
+   "count": 8,
+   "isHub": false
+  },
+  {
+   "id": "indexing-covering",
+   "label": "Covering indexes and index-only…",
+   "title": "Covering indexes and index-only scans",
+   "topic": "indexing",
+   "count": 8,
+   "isHub": false
+  }
+ ]
+}

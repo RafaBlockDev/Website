@@ -1,0 +1,60 @@
+---
+interface Props {
+  /** Must be unique on the page; also used as the chart container id. */
+  id: string;
+  /** Visible figure title. */
+  title: string;
+  /** Short visible description under the title, above the chart. */
+  description?: string;
+  /** Longer text for assistive tech, describing what the figure shows. */
+  srDescription: string;
+  /** Visible caption under the figure. */
+  caption?: string;
+  /** CSS max-width for the chart container, e.g. "40rem". */
+  maxWidth?: string;
+  /** CSS min-height so layout doesn't jump before the client script paints. */
+  minHeight?: string;
+}
+
+const { id, title, description, srDescription, caption, maxWidth = '40rem', minHeight = '16rem' } = Astro.props;
+
+const descId = `${id}-desc`;
+---
+
+<figure class="not-prose my-8">
+  <figcaption>
+    <p class="font-mono text-xs uppercase tracking-wide text-accent">{title}</p>
+    {description && <p class="mt-1 max-w-2xl text-sm text-ink/70">{description}</p>}
+  </figcaption>
+
+  <div
+    id={id}
+    class="observable-plot mx-auto mt-4 w-full overflow-x-auto"
+    style={`max-width: ${maxWidth}; min-height: ${minHeight};`}
+    role="img"
+    aria-label={title}
+    aria-describedby={descId}
+  >
+  </div>
+  <p id={descId} class="sr-only">{srDescription}</p>
+
+  {caption && <p class="mt-3 text-center font-mono text-xs text-ink/60">{caption}</p>}
+  <slot />
+</figure>
+
+<style>
+  .observable-plot :global(svg) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+  .observable-plot :global(text) {
+    fill: currentColor;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .observable-plot :global(*) {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+</style>

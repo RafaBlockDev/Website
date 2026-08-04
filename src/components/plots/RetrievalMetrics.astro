@@ -1,0 +1,68 @@
+---
+import ObservablePlot from './ObservablePlot.astro';
+import retrieval from '../../data/embedding-hubness/figures/retrieval-metrics.json';
+
+const { metrics, k } = retrieval;
+---
+
+<ObservablePlot
+  id="fig-retrieval-metrics"
+  title={`Figure 5 · Retrieval metrics at k = ${k}, cosine vs. CSLS`}
+  description="Precision@1, MRR, and nDCG@5 on a shared 0–1 axis, so the size of any change is honest."
+  srDescription={`Dumbbell chart comparing three retrieval metrics between cosine and CSLS ranking, all on a 0 to 1 scale: ${metrics
+    .map((m: any) => `${m.label} goes from ${m.cosine.toFixed(3)} under cosine to ${m.csls.toFixed(3)} under CSLS`)
+    .join('; ')}.`}
+  caption="Muted dot: cosine. Accent dot: CSLS. Same 0–1 axis for all three metrics."
+  maxWidth="34rem"
+  minHeight="12rem"
+>
+</ObservablePlot>
+
+<script>
+  import * as Plot from '@observablehq/plot';
+  import retrieval from '../../data/embedding-hubness/figures/retrieval-metrics.json';
+  import { COLORS, baseStyle, renderResponsive } from './plot-theme';
+
+  const container = document.getElementById('fig-retrieval-metrics');
+  if (container) {
+    const { metrics } = retrieval;
+    const labels = metrics.map((m: any) => m.label);
+
+    renderResponsive(container, (width) =>
+      Plot.plot({
+        width,
+        height: metrics.length * 46 + 20,
+        marginLeft: 92,
+        marginRight: 36,
+        marginTop: 10,
+        marginBottom: 30,
+        style: baseStyle,
+        x: { domain: [0, 1], label: 'score', labelAnchor: 'center', labelArrow: false, grid: true },
+        y: { domain: labels, label: null },
+        marks: [
+          Plot.ruleX([0]),
+          Plot.link(metrics, { x1: 'cosine', y1: 'label', x2: 'csls', y2: 'label', stroke: COLORS.inkFaint, strokeWidth: 2 }),
+          Plot.dot(metrics, { x: 'cosine', y: 'label', fill: COLORS.inkMuted, r: 5 }),
+          Plot.dot(metrics, { x: 'csls', y: 'label', fill: COLORS.accent, r: 5 }),
+          Plot.text(metrics, {
+            x: 'cosine',
+            y: 'label',
+            text: (d: any) => d.cosine.toFixed(3),
+            dy: 16,
+            fill: COLORS.inkMuted,
+            fontSize: 11
+          }),
+          Plot.text(metrics, {
+            x: 'csls',
+            y: 'label',
+            text: (d: any) => d.csls.toFixed(3),
+            dy: -12,
+            fill: COLORS.accent,
+            fontWeight: 'bold',
+            fontSize: 11
+          })
+        ]
+      })
+    );
+  }
+</script>
