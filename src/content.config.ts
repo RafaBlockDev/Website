@@ -1,6 +1,20 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
+// Link fields are rendered straight into href attributes. z.string().url()
+// alone is not enough: "javascript:alert(1)" and "data:..." parse as valid
+// URLs and would execute on click. Restrict to http(s) so hostile schemes
+// are rejected at build time.
+const httpUrl = z.union([
+  z.literal(''),
+  z
+    .string()
+    .url()
+    .refine((value) => /^https?:\/\//i.test(value), {
+      message: 'URL must use the http or https scheme'
+    })
+]);
+
 const research = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/research' }),
   schema: z.object({
@@ -24,9 +38,9 @@ const research = defineCollection({
     contributions: z.array(z.string()).default([]),
     limitations: z.array(z.string()).default([]),
     related: z.array(z.string()).default([]),
-    arxivId: z.string().optional(),
-    pdfUrl: z.string().optional(),
-    codeUrl: z.string().optional(),
+    arxivId: z.string().regex(/^[0-9]{4}\.[0-9]{4,5}(v[0-9]+)?$/).optional(),
+    pdfUrl: httpUrl.optional(),
+    codeUrl: httpUrl.optional(),
     bibtex: z.string().optional(),
     tags: z.array(z.string()).default([]),
     ogImage: z.string().optional(),
@@ -43,8 +57,8 @@ const projects = defineCollection({
     updatedDate: z.date().optional(),
     role: z.string().optional(),
     stack: z.array(z.string()).default([]),
-    repoUrl: z.string().optional(),
-    demoUrl: z.string().optional(),
+    repoUrl: httpUrl.optional(),
+    demoUrl: httpUrl.optional(),
     tags: z.array(z.string()).default([]),
     ogImage: z.string().optional(),
     draft: z.boolean().default(false)

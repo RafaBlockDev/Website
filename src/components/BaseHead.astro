@@ -28,6 +28,18 @@ const {
 
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(withBase(ogImage), SITE.url).href;
+
+// JSON.stringify does not escape characters that are significant inside an
+// HTML <script> context, so a string field containing "</script>" (or the
+// line-separator code points U+2028/U+2029) could break out of the block and
+// inject markup. Escaping them keeps the payload inert while still valid JSON.
+const serializeJsonLd = (obj: object) =>
+  JSON.stringify(obj)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
 ---
 
 <meta charset="UTF-8" />
@@ -73,5 +85,5 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(withBase(ogIma
 <meta name="twitter:image" content={ogImageUrl} />
 
 {jsonLd.map((obj) => (
-  <script type="application/ld+json" set:html={JSON.stringify(obj)} />
+  <script type="application/ld+json" set:html={serializeJsonLd(obj)} />
 ))}
